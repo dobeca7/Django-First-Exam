@@ -44,9 +44,9 @@ class Player(models.Model):
         ]
 
     def clean(self):
-        if self.position == "GOALKEEPER" and self.dominant_foot == "BOTH":
+        if self.position == "GK" and self.dominant_foot == "both":
             raise ValidationError(
-                {"goalkeeper": "The goalkeeper cannot have both dominant foots"}
+                {"dominant_foot": "The goalkeeper cannot have both dominant foots"}
             )
     def __str__(self):
         return f"{self.name} - {self.position}"

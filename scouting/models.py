@@ -45,9 +45,9 @@ class Skill(models.Model):
 class ScoutReport(models.Model):
 
     class RecommendationChoices(models.TextChoices):
-        SIGN = 's', 'Sign'
-        MONITOR = 'm', 'Monitor'
-        REJECT = 'r', 'Reject'
+        SIGN = 'sign', 'Sign'
+        MONITOR = 'monitor', 'Monitor'
+        REJECT = 'reject', 'Reject'
 
     player = models.ForeignKey("players.Player", on_delete=models.CASCADE, related_name="reports")
 
