@@ -11,15 +11,19 @@ class Player(models.Model):
         FORWARD = "FW", "Forward"
 
     class DominantFootChoices(models.TextChoices):
-        LEFT = "left", 'left'
-        RIGHT = 'right', 'right'
-        BOTH = 'both', 'both'
+        LEFT = "Left", 'Left'
+        RIGHT = 'Right', 'Right'
+        BOTH = 'Both', 'Both'
 
     name = models.CharField(max_length=100)
 
     birth_date = models.DateField()
 
-    age = models.PositiveIntegerField()
+    nationality = models.CharField(max_length=50)
+
+    height = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(300)])
+
+    weight = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(200)])
 
     position = models.CharField(
         max_length=10,
@@ -32,7 +36,9 @@ class Player(models.Model):
 
     academy = models.ForeignKey("academies.Academy", on_delete=models.CASCADE, related_name="players")
 
-    skills = models.ManyToManyField("scouting.Skill", related_name="players", blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ("-potential", "name")
@@ -44,9 +50,11 @@ class Player(models.Model):
         ]
 
     def clean(self):
-        if self.position == "GK" and self.dominant_foot == "both":
+        if (self.position == Player.PositionChoices.GOALKEEPER
+                and self.dominant_foot == Player.DominantFootChoices.BOTH):
             raise ValidationError(
-                {"dominant_foot": "The goalkeeper cannot have both dominant foots"}
+                {"dominant_foot": "The goalkeeper cannot have both dominant feet"}
             )
+
     def __str__(self):
         return f"{self.name} - {self.position}"

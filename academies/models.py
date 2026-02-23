@@ -1,5 +1,7 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils.text import slugify
+
 
 class Academy(models.Model):
 
@@ -11,13 +13,18 @@ class Academy(models.Model):
         validators=[MinValueValidator(1800), MaxValueValidator(2100)]
     )
 
+    slug = models.CharField(max_length=100,unique=True,blank=True,null=True)
+
     contact_email = models.EmailField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        ordering = ("name",)
+    updated_at = models.DateTimeField(auto_now=True)
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(f"{self.name}-{self.city}")
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.name} ({self.city})"

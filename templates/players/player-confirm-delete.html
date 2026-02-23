@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Player{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card card-modern border-0">
+                    <div class="card-body p-4">
+                        <h1 class="h4 text-danger">Delete Player</h1>
+                        <p>Are you sure you want to delete <strong>{{ object.name }}</strong>?</p>
+                        <form method="post">
+                            {% csrf_token %}
+                            <button class="btn btn-danger" type="submit">Yes, delete</button>
+                            <a class="btn btn-outline-secondary" href="{% url 'player-detail' object.pk %}">Cancel</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

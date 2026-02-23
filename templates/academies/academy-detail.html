@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Academy Details{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="h3 section-title mb-0">{{ academy.name }}</h1>
+            <div class="d-flex gap-2">
+                <a class="btn btn-outline-primary" href="{% url 'academy-edit' academy.pk %}">Edit</a>
+                <a class="btn btn-outline-danger" href="{% url 'academy-delete' academy.pk %}">Delete</a>
+            </div>
+        </div>
+
+        <div class="card card-modern border-0">
+            <div class="card-body">
+                <p class="mb-1"><strong>City:</strong> {{ academy.city }}</p>
+                <p class="mb-1"><strong>Founded:</strong> {{ academy.founded_year }}</p>
+                <p class="mb-0"><strong>Contact email:</strong> {{ academy.contact_email|default:"-" }}</p>
+            </div>
+        </div>
+
+        <a class="btn btn-link px-0 mt-3" href="{% url 'academy-list' %}">Back to academies</a>
+    </div>
+</section>
+{% endblock %}

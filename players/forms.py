@@ -5,36 +5,30 @@ from django import forms
 from players.models import Player
 
 
-class BasePlayerForm(forms.ModelForm):
+class PlayerForm(forms.ModelForm):
     class Meta:
         model = Player
         fields = '__all__'
         labels = {
-            "name": "Player name",
-            "birth_date": "Birth date",
-            "age": "Age",
-            "position": "Position",
-            "dominant_foot": "Dominant foot",
-            "potential": "Potential",
-            "academy": "Academy",
-            "skills": "Skills",
+            "height": "Height (cm)",
+            "weight": "Weight (kg)",
+            "potential": "Potential (1-100)",
         }
         help_texts = {
-            "potential": "Value between 1 and 100.",
-            "skills": "Optional. You can select multiple.",
+            "potential": "Use a value between 1 and 100.",
+        }
+        error_messages = {
+            "name": {
+                "required": "Please enter the player name.",
+            },
+            "academy": {
+                "required": "Please select an academy.",
+            },
         }
         widgets = {
-            "age":forms.NumberInput(attrs={"placeholder": "Age"}),
-            "potential": forms.NumberInput(attrs={"min": 1, "max": 100}),
-            "skills": forms.SelectMultiple(attrs={"size": 6}),
+            'birth_date': forms.DateInput(format="%d-%m-%Y", attrs={"type": "date"}),
+            "height": forms.NumberInput(attrs={"placeholder": "Example: 178"}),
+            "weight": forms.NumberInput(attrs={"placeholder": "Example: 72"}),
+            "potential": forms.NumberInput(attrs={"placeholder": "Example: 84", "min": 1, "max": 100}),
         }
 
-class PlayerCreateForm(BasePlayerForm):
-    pass
-
-
-class PlayerEditForm(BasePlayerForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["academy"].disabled = True
-        self.fields["academy"].help_text = "Academy is read-only in edit mode."

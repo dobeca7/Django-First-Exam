@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Scout Reports{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="h3 section-title mb-0">Scout Reports</h1>
+            <a class="btn btn-primary" href="{% url 'report-create' %}">Create Report</a>
+        </div>
+
+        <div class="card card-modern border-0">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Player</th>
+                        <th>Scout</th>
+                        <th>Rating</th>
+                        <th>Recommendation</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for report in reports %}
+                        <tr>
+                            <td>{{ report.player.name }}</td>
+                            <td>{{ report.scout_name }}</td>
+                            <td>{{ report.rating }}</td>
+                            <td>{{ report.get_recommendation_display }}</td>
+                            <td class="text-end">
+                                <a class="btn btn-sm btn-outline-dark" href="{% url 'report-detail' report.pk %}">Details</a>
+                                <a class="btn btn-sm btn-outline-primary" href="{% url 'report-edit' report.pk %}">Edit</a>
+                                <a class="btn btn-sm btn-outline-danger" href="{% url 'report-delete' report.pk %}">Delete</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-soft">No reports available.</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

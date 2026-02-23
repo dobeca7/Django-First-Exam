@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Player Details{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="h3 section-title mb-0">{{ player.name }}</h1>
+            <div class="d-flex gap-2">
+                <a class="btn btn-outline-primary" href="{% url 'player-edit' player.pk %}">Edit</a>
+                <a class="btn btn-outline-danger" href="{% url 'player-delete' player.pk %}">Delete</a>
+            </div>
+        </div>
+
+        <div class="card card-modern border-0">
+            <div class="card-body">
+                <p class="mb-1"><strong>Nationality:</strong> {{ player.nationality }}</p>
+                <p class="mb-1"><strong>Position:</strong> {{ player.get_position_display }}</p>
+                <p class="mb-1"><strong>Dominant foot:</strong> {{ player.get_dominant_foot_display }}</p>
+                <p class="mb-1"><strong>Height:</strong> {{ player.height }} cm</p>
+                <p class="mb-1"><strong>Weight:</strong> {{ player.weight }} kg</p>
+                <p class="mb-1"><strong>Potential:</strong> {{ player.potential }}</p>
+                <p class="mb-0"><strong>Academy:</strong> {{ player.academy.name }}</p>
+            </div>
+        </div>
+
+        <a class="btn btn-link px-0 mt-3" href="{% url 'player-list' %}">Back to players</a>
+    </div>
+</section>
+{% endblock %}

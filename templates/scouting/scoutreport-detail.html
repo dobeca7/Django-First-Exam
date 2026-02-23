@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Report Details{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="h3 section-title mb-0">Report #{{ report.pk }}</h1>
+            <div class="d-flex gap-2">
+                <a class="btn btn-outline-primary" href="{% url 'report-edit' report.pk %}">Edit</a>
+                <a class="btn btn-outline-danger" href="{% url 'report-delete' report.pk %}">Delete</a>
+            </div>
+        </div>
+
+        <div class="card card-modern border-0">
+            <div class="card-body">
+                <p class="mb-1"><strong>Player:</strong> {{ report.player.name }}</p>
+                <p class="mb-1"><strong>Scout:</strong> {{ report.scout_name }}</p>
+                <p class="mb-1"><strong>Rating:</strong> {{ report.rating }}</p>
+                <p class="mb-1"><strong>Recommendation:</strong> {{ report.get_recommendation_display }}</p>
+                <p class="mb-0"><strong>Notes:</strong> {{ report.notes|default:"No notes" }}</p>
+            </div>
+        </div>
+
+        <a class="btn btn-link px-0 mt-3" href="{% url 'report-list' %}">Back to reports</a>
+    </div>
+</section>
+{% endblock %}

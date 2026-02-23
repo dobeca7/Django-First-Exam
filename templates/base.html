@@ -7,40 +7,39 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
         :root {
-            --brand-navy: #0f172a;
-            --brand-blue: #2563eb;
-            --brand-green: #10b981;
+            --brand-ink: #0f172a;
+            --brand-blue: #0ea5e9;
+            --brand-green: #22c55e;
             --surface: #f8fafc;
-            --text-muted: #64748b;
+            --muted: #64748b;
         }
 
         body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             background:
-                radial-gradient(circle at 10% 10%, rgba(37, 99, 235, 0.08), transparent 35%),
-                radial-gradient(circle at 90% 90%, rgba(16, 185, 129, 0.08), transparent 35%),
+                radial-gradient(circle at 10% 0%, rgba(14, 165, 233, .08), transparent 30%),
+                radial-gradient(circle at 90% 100%, rgba(34, 197, 94, .08), transparent 35%),
                 var(--surface);
         }
 
-        .hero-bg {
-            background: linear-gradient(125deg, var(--brand-blue) 0%, var(--brand-green) 100%);
-        }
-
-        .navbar-brand {
-            letter-spacing: 0.3px;
+        .brand-shell {
+            background: linear-gradient(120deg, var(--brand-blue), var(--brand-green));
         }
 
         .card-modern {
             border: 1px solid rgba(148, 163, 184, 0.25);
             border-radius: 1rem;
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.07);
+            box-shadow: 0 14px 30px rgba(15, 23, 42, .06);
         }
 
         .section-title {
-            color: var(--brand-navy);
+            color: var(--brand-ink);
         }
 
         .text-soft {
-            color: var(--text-muted);
+            color: var(--muted);
         }
 
         form p {
@@ -49,8 +48,9 @@
 
         form label {
             display: block;
+            margin-bottom: .4rem;
             font-weight: 600;
-            margin-bottom: 0.4rem;
+            color: var(--brand-ink);
         }
 
         form input,
@@ -58,54 +58,34 @@
         form textarea {
             width: 100%;
             border: 1px solid #cbd5e1;
-            border-radius: 0.65rem;
-            padding: 0.55rem 0.75rem;
-            background-color: #fff;
+            border-radius: .7rem;
+            padding: .55rem .8rem;
+            background: #fff;
         }
 
         form .helptext {
             display: block;
-            margin-top: 0.35rem;
-            color: var(--text-muted);
-            font-size: 0.875rem;
+            margin-top: .35rem;
+            color: var(--muted);
+            font-size: .875rem;
+        }
+
+        .errorlist {
+            margin: .25rem 0 .5rem 0;
+            padding-left: 1rem;
+            color: #dc2626;
+            font-size: .875rem;
         }
     </style>
 </head>
-<body class="d-flex flex-column min-vh-100">
-<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--brand-navy);">
-    <div class="container">
-        <a class="navbar-brand fw-semibold" href="{% url 'home' %}">Future Stars</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="mainNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'home' %}">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'player-list' %}">Players</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'player-create' %}">Add Player</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/">Admin</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<body>
+{% include "common/_header.html" %}
 
 <main class="flex-grow-1">
     {% block content %}{% endblock %}
 </main>
 
-<footer class="text-white-50 py-3 mt-auto" style="background-color: var(--brand-navy);">
-    <div class="container text-center small">
-        Future Football Stars Platform
-    </div>
-</footer>
+{% include "common/_footer.html" %}
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>

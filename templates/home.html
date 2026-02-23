@@ -1,80 +1,24 @@
 {% extends "base.html" %}
 
-{% block title %}Home | Future Football Stars{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block content %}
-<section class="hero-bg text-white py-5 border-bottom">
-    <div class="container py-5">
-        <div class="row align-items-center g-4">
-            <div class="col-lg-7">
-                <span class="badge bg-light text-primary mb-3 px-3 py-2 rounded-pill">Youth Talent Platform</span>
-                <h1 class="display-4 fw-bold">Discover Tomorrow's Football Icons</h1>
-                <p class="lead mt-3 mb-4">
-                    Track academies, evaluate players, and build scouting reports in one streamlined Django platform.
-                </p>
-                <div class="d-flex flex-wrap gap-2">
-                    <a href="{% url 'player-list' %}" class="btn btn-light btn-lg px-4">Open Player Hub</a>
-                    <a href="{% url 'player-create' %}" class="btn btn-outline-light btn-lg px-4">Create Player Form</a>
-                </div>
-            </div>
-            <div class="col-lg-5">
-                <div class="card card-modern border-0">
-                    <div class="card-body p-4 text-dark">
-                        <h2 class="h5 fw-bold mb-3 section-title">What this app gives you</h2>
-                        <ul class="mb-0">
-                            <li>Academy and player management</li>
-                            <li>Skill-based scouting workflow</li>
-                            <li>Fast overview for youth talent pipelines</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
 <section class="py-5">
     <div class="container">
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card card-modern border-0">
-                    <div class="card-body">
-                        <h2 class="h4 mb-3 section-title">Quick Actions</h2>
-                        <div class="d-flex flex-wrap gap-2">
-                            <a class="btn btn-primary" href="{% url 'player-list' %}">All Players</a>
-                            <a class="btn btn-success" href="{% url 'player-create' %}">Open Create Form</a>
-                            <a class="btn btn-dark" href="/admin/">Open Admin Panel</a>
-                        </div>
-                        <p class="text-soft mb-0 mt-3">
-                            Player edit form is reachable from the <strong>All Players</strong> page via each player's Edit button.
-                        </p>
-                    </div>
-                </div>
+        <div class="row align-items-center g-4">
+            <div class="col-lg-6">
+                <h1 class="display-5 fw-bold section-title">Find the next football legend</h1>
+                <p class="text-soft fs-5 mt-3">
+                    Discover young talents and track their growth
+                </p>
             </div>
-        </div>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card card-modern h-100 border-0">
-                    <div class="card-body">
-                        <h3 class="h5 section-title">Academies</h3>
-                        <p class="text-soft mb-0">Organize academy information and long-term development environments.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card card-modern h-100 border-0">
-                    <div class="card-body">
-                        <h3 class="h5 section-title">Players</h3>
-                        <p class="text-soft mb-0">Capture player profile, potential, role, and technical attributes.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card card-modern h-100 border-0">
-                    <div class="card-body">
-                        <h3 class="h5 section-title">Scouting</h3>
-                        <p class="text-soft mb-0">Record reports and recommendations to support recruitment decisions.</p>
-                    </div>
+            <div class="col-lg-6">
+                <div class="card card-modern border-0 overflow-hidden">
+                    <img
+                        src="https://images.unsplash.com/photo-1575361204480-aadea25e6e68?auto=format&fit=crop&w=1200&q=80"
+                        alt="Young kids playing football"
+                        class="img-fluid"
+                    >
                 </div>
             </div>
         </div>

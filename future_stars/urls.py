@@ -20,7 +20,9 @@ from django.urls import include, path
 from players.views import home
 
 urlpatterns = [
-    path('', home, name='home'),
-    path('players/', include('players.urls')),
+    path("", home, name="home"),
+    path("academies/", include("academies.urls")),
+    path("players/", include("players.urls")),
+    path("scouting/", include("scouting.urls")),
     path('admin/', admin.site.urls),
 ]

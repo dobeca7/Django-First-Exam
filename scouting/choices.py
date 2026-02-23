@@ -1,0 +1,31 @@
+from django.db import models
+
+class PlayerSkills(models.TextChoices):
+    FirstTouch = 'ft', 'First Touch'
+    Dribbling = 'db', 'Dribbling'
+    Passing = 'ps', 'Passing'
+    Finishing = 'fn', 'Finishing'
+    BallControl = 'bc', 'BallControl'
+    Crossing = 'cr', 'Crossing'
+    SetPieces = 'sep', 'SetPieces'
+    Physical = 'ph', 'Physical'
+    Acceleration = 'ac', 'Acceleration'
+    SprintSpeed = 'sp', 'SprintSpeed'
+    Agility = 'ag', 'Agility'
+    Stamina = 'sta', 'Stamina'
+    Strength = 'st', 'Strength'
+    Balance = 'b', 'Balance'
+    Recovery = 'r', 'Recovery'
+    MentalStrength = 'mt', 'MentalStrength'
+    DecisionMaking = 'dm', 'DecisionMaking'
+    Concentration = 'c', 'Concentration'
+    Leadership = 'l', 'Leadership'
+    Confidence = 'con', 'Confidence'
+    Positioning = 'p', 'Positioning'
+    DefensiveAwareness = 'd', 'DefensiveAwareness'
+    GameReading = 'g', 'GameReading'
+
+class RecommendationChoices(models.TextChoices):
+    SIGN = 'sign', 'Sign'
+    MONITOR = 'monitor', 'Monitor'
+    REJECT = 'reject', 'Reject'
