@@ -1,5 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from future_stars.models import TimeStampedModel
 from scouting.choices import PlayerSkills, RecommendationChoices
 
 class Skill(models.Model):
@@ -17,7 +18,7 @@ class Skill(models.Model):
         return self.name
 
 
-class ScoutReport(models.Model):
+class ScoutReport(TimeStampedModel):
 
     player = models.ForeignKey("players.Player", on_delete=models.CASCADE, related_name="reports")
 
@@ -34,10 +35,6 @@ class ScoutReport(models.Model):
         choices=RecommendationChoices,
         default="monitor",
     )
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ("-created_at",)

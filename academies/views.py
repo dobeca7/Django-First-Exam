@@ -1,3 +1,4 @@
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
@@ -6,10 +7,11 @@ from academies.forms import AcademyDeleteForm, AcademyForm
 from academies.models import Academy
 
 
-class AcademyCreateView(CreateView):
+class AcademyCreateView(SuccessMessageMixin, CreateView):
     model = Academy
     form_class = AcademyForm
     template_name = "academies/academy-form.html"
+    success_message = "Academy created successfully."
 
     def get_success_url(self):
         return reverse("academy-detail-slug", kwargs={"slug": self.object.slug})
@@ -23,13 +25,12 @@ class AcademyEditView(UpdateView):
     def get_success_url(self):
         return reverse("academy-detail-slug", kwargs={"slug": self.object.slug})
 
-
 class AcademyListView(ListView):
     model = Academy
     queryset = Academy.objects.order_by("name")
     template_name = "academies/academy-list.html"
     context_object_name = "academies"
-
+    paginate_by = 7
 
 class AcademyDetailView(DetailView):
     model = Academy

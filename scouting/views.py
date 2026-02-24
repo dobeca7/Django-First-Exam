@@ -1,3 +1,4 @@
+from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
@@ -5,11 +6,12 @@ from scouting.forms import ScoutReportForm
 from scouting.models import ScoutReport
 
 
-class ScoutReportCreateView(CreateView):
+class ScoutReportCreateView(SuccessMessageMixin, CreateView):
     model = ScoutReport
     form_class = ScoutReportForm
     template_name = "scouting/scoutreport-form.html"
     success_url = reverse_lazy("report-list")
+    success_message = "Scout report created successfully."
 
 
 class ScoutReportEditView(UpdateView):
@@ -23,6 +25,7 @@ class ScoutReportListView(ListView):
     model = ScoutReport
     template_name = "scouting/scoutreport-list.html"
     context_object_name = "reports"
+    paginate_by = 7
     queryset = ScoutReport.objects.select_related("player", "player__academy").order_by("-created_at")
 
 

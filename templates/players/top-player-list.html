@@ -1,16 +1,13 @@
 {% extends "common/base.html" %}
-{% load player_tags %}
-
-{% block title %}Players{% endblock %}
+{% block title %}Top Players{% endblock %}
 
 {% block content %}
 <section class="py-5">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1 class="h3 section-title mb-0">Players</h1>
+            <h1 class="h3 section-title mb-0">Top Players (Potential Over 90)</h1>
             <div class="d-flex gap-2">
-                <a class="btn btn-outline-secondary" href="{% url 'player-compare' %}">Compare Players</a>
-                <a class="btn btn-outline-secondary" href="{% url 'player-top-list' %}">Top Players</a>
+                <a class="btn btn-outline-secondary" href="{% url 'player-list' %}">All Players</a>
                 <a class="btn btn-primary" href="{% url 'player-create' %}">Create Player</a>
             </div>
         </div>
@@ -21,7 +18,6 @@
                     <thead class="table-light">
                     <tr>
                         <th>Name</th>
-                        <th></th>
                         <th>Position</th>
                         <th>Potential</th>
                         <th>Academy</th>
@@ -32,7 +28,6 @@
                     {% for player in players %}
                         <tr>
                             <td>{{ player.name }}</td>
-                            <td class="text-warning text-nowrap">{% stars player %}</td>
                             <td>{{ player.get_position_display }}</td>
                             <td>{{ player.potential }}</td>
                             <td>{{ player.academy.name }}</td>
@@ -44,7 +39,7 @@
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="6" class="text-soft">No players available.</td>
+                            <td colspan="5" class="text-soft">No players with potential over 80.</td>
                         </tr>
                     {% endfor %}
                     </tbody>

@@ -23,7 +23,7 @@ class ScoutReportForm(forms.ModelForm):
         recommendation = cleaned_data.get("recommendation")
         rating = cleaned_data.get("rating")
 
-        if recommendation == "sign" and rating < 7:
+        if recommendation == "sign" and rating is not None and rating < 7:
             self.add_error("recommendation", "Use 'Sign' only for ratings over 7.")
 
         return cleaned_data

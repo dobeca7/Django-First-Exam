@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from players.views import home
+from future_stars.views import custom_404, home
 
 urlpatterns = [
     path("", home, name="home"),
@@ -26,3 +26,5 @@ urlpatterns = [
     path("scouting/", include("scouting.urls")),
     path('admin/', admin.site.urls),
 ]
+
+handler404 = custom_404

@@ -1,15 +1,15 @@
-from datetime import date
-
 from django import forms
-
 from academies.models import Academy
-
 
 class AcademyForm(forms.ModelForm):
     class Meta:
         model = Academy
 
         fields = ("name", "city", "founded_year", "contact_email")
+
+        help_texts = {
+            "founded_year": "Use a value between 1800 and 2026.",
+        }
 
         error_messages = {
             "name": {
@@ -18,6 +18,10 @@ class AcademyForm(forms.ModelForm):
 
             "contact_email": {
                 "invalid": "Please enter a valid email address.",
+            },
+
+            'founded_year' : {"invalid": "Please enter a valid year between 1800 and 2026."
+
             },
         }
 

@@ -1,9 +1,10 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.text import slugify
+from future_stars.models import TimeStampedModel
 
 
-class Academy(models.Model):
+class Academy(TimeStampedModel):
 
     name = models.CharField(max_length=100, unique=True)
 
@@ -16,10 +17,6 @@ class Academy(models.Model):
     slug = models.CharField(max_length=100,unique=True,blank=True,null=True)
 
     contact_email = models.EmailField(blank=True, null=True)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:

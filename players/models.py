@@ -1,8 +1,10 @@
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from future_stars.models import TimeStampedModel
 
-class Player(models.Model):
+
+class Player(TimeStampedModel):
 
     class PositionChoices(models.TextChoices):
         GOALKEEPER = "GK", "Goalkeeper"
@@ -35,10 +37,6 @@ class Player(models.Model):
     potential = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(100)])
 
     academy = models.ForeignKey("academies.Academy", on_delete=models.CASCADE, related_name="players")
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ("-potential", "name")

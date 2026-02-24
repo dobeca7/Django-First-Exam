@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "common/base.html" %}
 
 {% block title %}Academies{% endblock %}
 
@@ -7,7 +7,9 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="h3 section-title mb-0">Academies</h1>
-            <a class="btn btn-primary" href="{% url 'academy-create' %}">Create Academy</a>
+            <div class="d-flex gap-2">
+                <a class="btn btn-primary" href="{% url 'academy-create' %}">Create Academy</a>
+            </div>
         </div>
 
         <div class="card card-modern border-0">
@@ -26,7 +28,7 @@
                     {% for academy in academies %}
                         <tr>
                             <td>{{ academy.name }}</td>
-                            <td>{{ academy.city }}</td>
+                            <td>{{ academy.city|upper }}</td>
                             <td>{{ academy.founded_year }}</td>
                             <td>{{ academy.contact_email|default:"-" }}</td>
                             <td class="text-end">
@@ -48,6 +50,7 @@
                 </table>
             </div>
         </div>
+        {% include "common/_pagination.html" %}
     </div>
 </section>
 {% endblock %}

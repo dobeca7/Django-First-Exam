@@ -1,6 +1,21 @@
-<footer class="mt-auto py-3 border-top bg-white">
-    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
-        <p class="small text-soft mb-0">Future Football Stars Platform</p>
-        <p class="small text-soft mb-0">Where legends begin their journey</p>
+<footer class="mt-auto pt-5 pb-4 border-top" style="background: linear-gradient(180deg, #ffffff 0%, #eef6ff 100%);">
+    <div class="container">
+        <div class="row g-4 align-items-start">
+            <div class="col-md-5">
+                <h5 class="mb-2 section-title">Future Football Stars</h5>
+                <p class="text-soft mb-0">Where stars begin their journey.</p>
+            </div>
+            <div class="col-md-4">
+                <p class="fw-semibold mb-2">Quick Links</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a class="text-decoration-none text-dark" href="{% url 'home' %}">Home</a>
+                    <a class="text-decoration-none text-dark" href="{% url 'academy-list' %}">Academies</a>
+                    <a class="text-decoration-none text-dark" href="{% url 'player-list' %}">Players</a>
+                    <a class="text-decoration-none text-dark" href="{% url 'report-list' %}">Reports</a>
+                </div>
+            </div>
+        </div>
+        <hr class="my-4">
+        <p class="small text-soft mb-0 text-center">© {% now "Y" %} Future Football Stars. All rights reserved.</p>
     </div>
 </footer>

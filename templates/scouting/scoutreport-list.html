@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "common/base.html" %}
 
 {% block title %}Scout Reports{% endblock %}
 
@@ -7,7 +7,9 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="h3 section-title mb-0">Scout Reports</h1>
-            <a class="btn btn-primary" href="{% url 'report-create' %}">Create Report</a>
+            <div class="d-flex gap-2">
+                <a class="btn btn-primary" href="{% url 'report-create' %}">Create Report</a>
+            </div>
         </div>
 
         <div class="card card-modern border-0">
@@ -44,6 +46,7 @@
                 </table>
             </div>
         </div>
+        {% include "common/_pagination.html" %}
     </div>
 </section>
 {% endblock %}
