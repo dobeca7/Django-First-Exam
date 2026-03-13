@@ -1,7 +1,16 @@
-from django.core.validators import MaxValueValidator, MinValueValidator
+from datetime import date
+
+from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.text import slugify
 from future_stars.models import TimeStampedModel
+
+
+def validate_max_year(value):
+    current_year = date.today().year
+    if value > current_year:
+        raise ValidationError(f"Use a value between 1800 and {current_year}.")
 
 
 class Academy(TimeStampedModel):
@@ -11,7 +20,7 @@ class Academy(TimeStampedModel):
     city = models.CharField(max_length=50)
 
     founded_year = models.PositiveIntegerField(
-        validators=[MinValueValidator(1800), MaxValueValidator(2100)]
+        validators=[MinValueValidator(1800), validate_max_year]
     )
 
     slug = models.CharField(max_length=100,unique=True,blank=True,null=True)
