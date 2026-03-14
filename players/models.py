@@ -1,6 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils import timezone
+from datetime import date
 from future_stars.models import TimeStampedModel
 
 
@@ -48,6 +50,14 @@ class Player(TimeStampedModel):
         ]
 
     def clean(self):
+        super().clean()
+        if self.birth_date:
+            min_birth_date = date(2000, 1, 1)
+            max_birth_date = timezone.localdate()
+            if not (min_birth_date <= self.birth_date <= max_birth_date):
+                raise ValidationError(
+                    {"birth_date": "Birth date must be between 01.01.2000 and today."}
+                )
         if (self.position == Player.PositionChoices.GOALKEEPER
                 and self.dominant_foot == Player.DominantFootChoices.BOTH):
             raise ValidationError(
