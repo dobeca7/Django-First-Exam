@@ -32,3 +32,18 @@ class PlayerForm(forms.ModelForm):
             "potential": forms.NumberInput(attrs={"placeholder": "Example: 84", "min": 1, "max": 100}),
         }
 
+    def clean_height(self):
+        height = self.cleaned_data.get("height")
+        if height is None:
+            return height
+        if not (1 <= height <= 300):
+            raise forms.ValidationError("Height must be between 1 and 300 cm.")
+        return height
+
+    def clean_weight(self):
+        weight = self.cleaned_data.get("weight")
+        if weight is None:
+            return weight
+        if not (1 <= weight <= 200):
+            raise forms.ValidationError("Weight must be between 1 and 200 kg.")
+        return weight
