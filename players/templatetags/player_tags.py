@@ -1,10 +1,6 @@
-from decimal import Decimal, ROUND_HALF_UP
-
 from django import template
-from django.db.models import Avg
 
 register = template.Library()
-
 
 @register.simple_tag
 def stars(player):

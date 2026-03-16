@@ -13,7 +13,41 @@
                         <p class="text-soft mb-4">Create or update scouting evaluations.</p>
                         <form method="post">
                             {% csrf_token %}
-                            {{ form.as_p }}
+                            {% for hidden in form.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+
+                            {% for field in form.visible_fields %}
+                                {% if field.name == "skills" %}
+                                    <div class="mb-3">
+                                        {{ field.label_tag }}
+                                        {% if field.errors %}
+                                            {{ field.errors }}
+                                        {% endif %}
+                                        <div class="skills-grid mt-2">
+                                            {% for checkbox in field %}
+                                                <label class="skill-item">
+                                                    {{ checkbox.tag }} <span>{{ checkbox.choice_label }}</span>
+                                                </label>
+                                            {% endfor %}
+                                        </div>
+                                        {% if field.help_text %}
+                                            <span class="helptext">{{ field.help_text }}</span>
+                                        {% endif %}
+                                    </div>
+                                {% else %}
+                                    <div class="mb-3">
+                                        {{ field.label_tag }}
+                                        {{ field }}
+                                        {% if field.errors %}
+                                            {{ field.errors }}
+                                        {% endif %}
+                                        {% if field.help_text %}
+                                            <span class="helptext">{{ field.help_text }}</span>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
                             <div class="d-flex gap-2 mt-3">
                                 <button class="btn btn-primary px-4" type="submit">Save</button>
                                 <a class="btn btn-outline-secondary" href="{% url 'home' %}">Cancel</a>

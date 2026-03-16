@@ -63,6 +63,49 @@
             background: #fff;
         }
 
+        form input[type="checkbox"],
+        form input[type="radio"] {
+            width: auto;
+            padding: 0;
+            margin-right: .5rem;
+        }
+
+        form ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+
+        form ul li {
+            margin-bottom: .35rem;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: .5rem 1rem;
+        }
+
+        .skills-grid .skill-item {
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+            font-weight: 500;
+            color: var(--brand-ink);
+        }
+
+        @media (max-width: 992px) {
+            .skills-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 576px) {
+            .skills-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
         form .helptext {
             display: block;
             margin-top: .35rem;
@@ -75,6 +118,11 @@
             padding-left: 1rem;
             color: #dc2626;
             font-size: .875rem;
+        }
+
+        .stars-cell {
+            font-size: 2rem;
+            letter-spacing: 3px;
         }
     </style>
 </head>

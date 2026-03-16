@@ -22,7 +22,7 @@ class PlayerSkills(models.TextChoices):
     Leadership = 'l', 'Leadership'
     Confidence = 'con', 'Confidence'
     Positioning = 'p', 'Positioning'
-    DefensiveAwareness = 'd', 'DefensiveAwareness'
+    DefensiveAwareness = 'd', 'Defence'
     GameReading = 'g', 'GameReading'
 
 class RecommendationChoices(models.TextChoices):

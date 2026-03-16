@@ -19,6 +19,15 @@
                 <p class="mb-1"><strong>Scout:</strong> {{ report.scout_name }}</p>
                 <p class="mb-1"><strong>Rating:</strong> {{ report.rating }}</p>
                 <p class="mb-1"><strong>Recommendation:</strong> {{ report.get_recommendation_display }}</p>
+                <p class="mb-1"><strong>Skills:</strong>
+                    {% if report.skills.exists %}
+                        {% for skill in report.skills.all %}
+                            <span class="badge text-bg-light border">{{ skill.name }}</span>
+                        {% endfor %}
+                    {% else %}
+                        None selected
+                    {% endif %}
+                </p>
                 <p class="mb-0"><strong>Notes:</strong> {{ report.notes|default:"No notes" }}</p>
             </div>
         </div>
