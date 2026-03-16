@@ -26,11 +26,19 @@ class PlayerForm(forms.ModelForm):
             },
         }
         widgets = {
-            'birth_date': forms.DateInput(format="%d-%m-%Y", attrs={"type": "date"}),
+            "birth_date": forms.DateInput(
+                format="%Y-%m-%d",
+                attrs={"type": "date"},
+            ),
             "height": forms.NumberInput(attrs={"placeholder": "Example: 178"}),
             "weight": forms.NumberInput(attrs={"placeholder": "Example: 72"}),
             "potential": forms.NumberInput(attrs={"placeholder": "Example: 84", "min": 1, "max": 100}),
         }
+
+    birth_date = forms.DateField(
+        input_formats=["%Y-%m-%d"],
+        help_text="Use format YYYY-MM-DD.",
+    )
 
     def clean_height(self):
         height = self.cleaned_data.get("height")

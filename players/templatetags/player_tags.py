@@ -13,4 +13,4 @@ def stars(player):
         return ""
 
     rounded_rating = max(int(avg_rating), 0)
-    return "★" * rounded_rating
+    return "*" * rounded_rating
