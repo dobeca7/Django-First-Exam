@@ -1,5 +1,4 @@
 from django import forms
-
 from scouting.models import ScoutReport, Skill
 
 

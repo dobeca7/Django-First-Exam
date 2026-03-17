@@ -2,7 +2,6 @@ from django.db.models import Avg
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
-
 from players.forms import PlayerForm
 from players.models import Player
 

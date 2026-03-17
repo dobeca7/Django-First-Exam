@@ -16,7 +16,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-
 from future_stars.views import custom_404, home
 
 urlpatterns = [

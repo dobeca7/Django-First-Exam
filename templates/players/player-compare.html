@@ -4,6 +4,49 @@
 {% block content %}
 <section class="py-5">
     <div class="container">
+        <style>
+            .compare-table th,
+            .compare-table td {
+                padding: 1rem 1.25rem;
+            }
+
+            .compare-table th:first-child,
+            .compare-table td:first-child {
+                min-width: 160px;
+            }
+
+            .compare-table th:not(:first-child),
+            .compare-table td:not(:first-child) {
+                min-width: 240px;
+            }
+
+            .compare-pick-grid {
+                margin-bottom: 0.5rem;
+            }
+
+            .compare-pick {
+                background: #ffffff;
+                border: 1px solid rgba(148, 163, 184, 0.4);
+                border-radius: 0.9rem;
+                padding: 0.85rem 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.6rem;
+                min-height: 56px;
+            }
+
+            .compare-pick .form-check-input {
+                width: 1.1rem;
+                height: 1.1rem;
+                margin-top: 0;
+            }
+
+            .compare-pick .form-check-label {
+                font-weight: 600;
+                color: var(--brand-ink);
+                font-size: 1rem;
+            }
+        </style>
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="h3 section-title mb-0">Compare Players</h1>
             <a class="btn btn-outline-secondary" href="{% url 'player-list' %}">Back to Players</a>
@@ -13,10 +56,10 @@
             <div class="card-body">
                 <form method="get">
                     <p class="text-soft mb-3">Select 2 or 3 players.</p>
-                    <div class="row g-2">
+                    <div class="row g-3 compare-pick-grid">
                         {% for player in all_players %}
-                            <div class="col-md-4">
-                                <div class="form-check">
+                            <div class="col-md-6 col-lg-4">
+                                <div class="form-check compare-pick">
                                     <input
                                         class="form-check-input"
                                         type="checkbox"
@@ -44,7 +87,7 @@
         {% if compared_players %}
             <div class="card card-modern border-0">
                 <div class="table-responsive">
-                    <table class="table align-middle mb-0">
+                    <table class="table align-middle mb-0 compare-table">
                         <thead class="table-light">
                         <tr>
                             <th>Stat</th>
