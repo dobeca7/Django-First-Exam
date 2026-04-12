@@ -8,7 +8,9 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="h3 section-title mb-0">Scout Reports</h1>
             <div class="d-flex gap-2">
-                <a class="btn btn-primary" href="{% url 'report-create' %}">Create Report</a>
+                {% if perms.scouting.add_scoutreport %}
+                    <a class="btn btn-primary" href="{% url 'report-create' %}">Create Report</a>
+                {% endif %}
             </div>
         </div>
 
@@ -33,8 +35,12 @@
                             <td>{{ report.get_recommendation_display }}</td>
                             <td class="text-end">
                                 <a class="btn btn-sm btn-outline-dark" href="{% url 'report-detail' report.pk %}">Details</a>
-                                <a class="btn btn-sm btn-outline-primary" href="{% url 'report-edit' report.pk %}">Edit</a>
-                                <a class="btn btn-sm btn-outline-danger" href="{% url 'report-delete' report.pk %}">Delete</a>
+                                {% if perms.scouting.change_scoutreport %}
+                                    <a class="btn btn-sm btn-outline-primary" href="{% url 'report-edit' report.pk %}">Edit</a>
+                                {% endif %}
+                                {% if perms.scouting.delete_scoutreport %}
+                                    <a class="btn btn-sm btn-outline-danger" href="{% url 'report-delete' report.pk %}">Delete</a>
+                                {% endif %}
                             </td>
                         </tr>
                     {% empty %}

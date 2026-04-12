@@ -17,6 +17,11 @@ Future Football Stars is a Django web application for managing football academie
 - `staticfiles/` - project static assets (images, etc.)
 
 ## Features
+- Public football data section for anonymous visitors
+- Private account dashboard for authenticated users
+- User registration, login, logout, and profile editing
+- Extended custom user model with football-related profile fields
+- Predefined admin groups: `Academy Managers` and `Scouts`
 - Full CRUD for academies
 - Full CRUD for players
 - Full CRUD for scout reports

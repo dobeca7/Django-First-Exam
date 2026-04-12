@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
@@ -6,19 +7,21 @@ from scouting.forms import ScoutReportForm
 from scouting.models import ScoutReport
 
 
-class ScoutReportCreateView(SuccessMessageMixin, CreateView):
+class ScoutReportCreateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = ScoutReport
     form_class = ScoutReportForm
     template_name = "scouting/scoutreport-form.html"
     success_url = reverse_lazy("report-list")
     success_message = "Scout report created successfully."
+    permission_required = "scouting.add_scoutreport"
 
 
-class ScoutReportEditView(UpdateView):
+class ScoutReportEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = ScoutReport
     form_class = ScoutReportForm
     template_name = "scouting/scoutreport-form.html"
     success_url = reverse_lazy("report-list")
+    permission_required = "scouting.change_scoutreport"
 
 
 class ScoutReportListView(ListView):
@@ -35,7 +38,8 @@ class ScoutReportDetailView(DetailView):
     context_object_name = "report"
 
 
-class ScoutReportDeleteView(DeleteView):
+class ScoutReportDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = ScoutReport
     template_name = "scouting/scoutreport-confirm-delete.html"
     success_url = reverse_lazy("report-list")
+    permission_required = "scouting.delete_scoutreport"

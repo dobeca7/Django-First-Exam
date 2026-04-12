@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Avg
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
@@ -6,19 +7,21 @@ from players.forms import PlayerForm
 from players.models import Player
 
 
-class PlayerCreateView(SuccessMessageMixin, CreateView):
+class PlayerCreateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = Player
     form_class = PlayerForm
     template_name = "players/player-form.html"
     success_url = reverse_lazy("player-list")
     success_message = "Player created successfully."
+    permission_required = "players.add_player"
 
 
-class PlayerEditView(UpdateView):
+class PlayerEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Player
     form_class = PlayerForm
     template_name = "players/player-form.html"
     success_url = reverse_lazy("player-list")
+    permission_required = "players.change_player"
 
 
 class PlayerListView(ListView):
@@ -47,10 +50,11 @@ class PlayerDetailView(DetailView):
     context_object_name = "player"
 
 
-class PlayerDeleteView(DeleteView):
+class PlayerDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Player
     template_name = "players/player-confirm-delete.html"
     success_url = reverse_lazy("player-list")
+    permission_required = "players.delete_player"
 
 
 class ComparePlayersView(TemplateView):

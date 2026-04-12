@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 
 
 PROJECT_APPS = [
+    'accounts',
     'academies',
     'players',
     'scouting',
@@ -46,6 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ] + PROJECT_APPS
+
+AUTH_USER_MODEL = "accounts.AppUser"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -122,6 +125,10 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+LOGIN_URL = "account-login"
+LOGIN_REDIRECT_URL = "account-dashboard"
+LOGOUT_REDIRECT_URL = "home"
 
 
 # Static files (CSS, JavaScript, Images)

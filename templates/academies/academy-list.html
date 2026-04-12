@@ -8,7 +8,9 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="h3 section-title mb-0">Academies</h1>
             <div class="d-flex gap-2">
-                <a class="btn btn-primary" href="{% url 'academy-create' %}">Create Academy</a>
+                {% if perms.academies.add_academy %}
+                    <a class="btn btn-primary" href="{% url 'academy-create' %}">Create Academy</a>
+                {% endif %}
             </div>
         </div>
 
@@ -37,8 +39,12 @@
                                 {% else %}
                                     <a class="btn btn-sm btn-outline-dark" href="{% url 'academy-detail' academy.pk %}">Details</a>
                                 {% endif %}
-                                <a class="btn btn-sm btn-outline-primary" href="{% url 'academy-edit' academy.pk %}">Edit</a>
-                                <a class="btn btn-sm btn-outline-danger" href="{% url 'academy-delete' academy.pk %}">Delete</a>
+                                {% if perms.academies.change_academy %}
+                                    <a class="btn btn-sm btn-outline-primary" href="{% url 'academy-edit' academy.pk %}">Edit</a>
+                                {% endif %}
+                                {% if perms.academies.delete_academy %}
+                                    <a class="btn btn-sm btn-outline-danger" href="{% url 'academy-delete' academy.pk %}">Delete</a>
+                                {% endif %}
                             </td>
                         </tr>
                     {% empty %}

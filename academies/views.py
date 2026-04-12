@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -7,20 +8,22 @@ from academies.forms import AcademyDeleteForm, AcademyForm
 from academies.models import Academy
 
 
-class AcademyCreateView(SuccessMessageMixin, CreateView):
+class AcademyCreateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = Academy
     form_class = AcademyForm
     template_name = "academies/academy-form.html"
     success_message = "Academy created successfully."
+    permission_required = "academies.add_academy"
 
     def get_success_url(self):
         return reverse("academy-detail-slug", kwargs={"slug": self.object.slug})
 
 
-class AcademyEditView(UpdateView):
+class AcademyEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Academy
     form_class = AcademyForm
     template_name = "academies/academy-form.html"
+    permission_required = "academies.change_academy"
 
     def get_success_url(self):
         return reverse("academy-detail-slug", kwargs={"slug": self.object.slug})
@@ -44,10 +47,11 @@ class AcademyDetailView(DetailView):
         return super().get_object(queryset=queryset)
 
 
-class AcademyDeleteView(DeleteView):
+class AcademyDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Academy
     template_name = "academies/academy-confirm-delete.html"
     success_url = reverse_lazy("academy-list")
+    permission_required = "academies.delete_academy"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

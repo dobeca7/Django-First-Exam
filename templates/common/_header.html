@@ -10,6 +10,19 @@
                     <li class="nav-item"><a class="nav-link text-white" href="{% url 'academy-list' %}">Academies</a></li>
                     <li class="nav-item"><a class="nav-link text-white" href="{% url 'player-list' %}">Players</a></li>
                     <li class="nav-item"><a class="nav-link text-white" href="{% url 'report-list' %}">ScoutReports</a></li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link text-white" href="{% url 'account-dashboard' %}">Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{% url 'account-profile-edit' %}">Profile</a></li>
+                        <li class="nav-item">
+                            <form method="post" action="{% url 'account-logout' %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-link nav-link text-white text-decoration-none">Logout</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link text-white" href="{% url 'account-login' %}">Login</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{% url 'account-register' %}">Register</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

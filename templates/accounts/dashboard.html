@@ -1,0 +1,54 @@
+{% extends "common/base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="card card-modern h-100 border-0">
+                    <div class="card-body p-4">
+                        <h1 class="h3 section-title">{{ user.get_full_name|default:user.username }}</h1>
+                        <p class="text-soft mb-4">Private account area available only to authenticated users.</p>
+                        <dl class="mb-0">
+                            <dt>Username</dt>
+                            <dd>{{ user.username }}</dd>
+                            <dt>Email</dt>
+                            <dd>{{ user.email|default:"-" }}</dd>
+                            <dt>Role</dt>
+                            <dd>{{ user.get_role_display }}</dd>
+                            <dt>Favourite Position</dt>
+                            <dd>{{ user.favorite_position|default:"-" }}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card card-modern h-100 border-0">
+                    <div class="card-body p-4">
+                        <h2 class="h4 section-title mb-3">Private tools</h2>
+                        <p class="text-soft">Your available actions depend on your group permissions.</p>
+                        <div class="d-flex flex-wrap gap-2">
+                            <a class="btn btn-outline-primary" href="{% url 'account-profile-edit' %}">Edit Profile</a>
+                            {% if perms.academies.add_academy %}
+                                <a class="btn btn-primary" href="{% url 'academy-create' %}">Create Academy</a>
+                            {% endif %}
+                            {% if perms.players.add_player %}
+                                <a class="btn btn-primary" href="{% url 'player-create' %}">Create Player</a>
+                            {% endif %}
+                            {% if perms.scouting.add_scoutreport %}
+                                <a class="btn btn-primary" href="{% url 'report-create' %}">Create Report</a>
+                            {% endif %}
+                        </div>
+                        <hr>
+                        <h3 class="h5 section-title">Bio</h3>
+                        <p class="mb-0">{{ user.bio|default:"No profile bio added yet." }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

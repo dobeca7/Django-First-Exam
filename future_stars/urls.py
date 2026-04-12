@@ -20,6 +20,7 @@ from future_stars.views import custom_404, home
 
 urlpatterns = [
     path("", home, name="home"),
+    path("accounts/", include("accounts.urls")),
     path("academies/", include("academies.urls")),
     path("players/", include("players.urls")),
     path("scouting/", include("scouting.urls")),
