@@ -28,6 +28,28 @@
             background: linear-gradient(120deg, var(--brand-blue), var(--brand-green));
         }
 
+        @media (min-width: 992px) {
+            .main-nav-shell {
+                display: flex;
+                align-items: center;
+                width: 100%;
+            }
+
+            .nav-balance,
+            .nav-actions {
+                flex: 1 1 0;
+            }
+
+            .nav-center {
+                flex: 0 0 auto;
+                margin-inline: auto;
+            }
+
+            .nav-actions {
+                justify-content: flex-end;
+            }
+        }
+
         .card-modern {
             border: 1px solid rgba(148, 163, 184, 0.25);
             border-radius: 1rem;

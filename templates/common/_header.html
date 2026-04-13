@@ -5,13 +5,16 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav ms-auto">
+            <div class="collapse navbar-collapse main-nav-shell" id="mainNav">
+                <div class="nav-balance d-none d-lg-block"></div>
+                <ul class="navbar-nav nav-center">
                     <li class="nav-item"><a class="nav-link text-white" href="{% url 'academy-list' %}">Academies</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="{% url 'report-list' %}">Scout Reports</a></li>
                     <li class="nav-item"><a class="nav-link text-white" href="{% url 'player-list' %}">Players</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="{% url 'report-list' %}">ScoutReports</a></li>
+                </ul>
+                <ul class="navbar-nav nav-actions">
                     {% if user.is_authenticated %}
-                        <li class="nav-item"><a class="nav-link text-white" href="{% url 'account-dashboard' %}">Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{% url 'account-dashboard' %}">Details</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="{% url 'account-profile-edit' %}">Profile</a></li>
                         <li class="nav-item">
                             <form method="post" action="{% url 'account-logout' %}" class="d-inline">

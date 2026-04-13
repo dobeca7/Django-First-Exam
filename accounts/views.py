@@ -12,7 +12,7 @@ class RegisterView(SuccessMessageMixin, CreateView):
     model = AppUser
     form_class = AppUserCreationForm
     template_name = "accounts/register.html"
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("account-login")
     success_message = "Your account was created successfully. You can now log in."
 
 
