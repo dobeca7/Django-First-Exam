@@ -28,6 +28,15 @@
                         None selected
                     {% endif %}
                 </p>
+                <p class="mb-1"><strong>Tags:</strong>
+                    {% if report.tags.exists %}
+                        {% for tag in report.tags.all %}
+                            <span class="badge text-bg-warning-subtle border">{{ tag.name }}</span>
+                        {% endfor %}
+                    {% else %}
+                        No tags assigned
+                    {% endif %}
+                </p>
                 <p class="mb-0"><strong>Notes:</strong> {{ report.notes|default:"No notes" }}</p>
             </div>
         </div>

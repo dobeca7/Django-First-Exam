@@ -29,13 +29,19 @@ class ScoutReportListView(ListView):
     template_name = "scouting/scoutreport-list.html"
     context_object_name = "reports"
     paginate_by = 7
-    queryset = ScoutReport.objects.select_related("player", "player__academy").order_by("-created_at")
+    queryset = (
+        ScoutReport.objects.select_related("player", "player__academy")
+        .prefetch_related("skills", "tags")
+        .order_by("-created_at")
+    )
 
 
 class ScoutReportDetailView(DetailView):
     model = ScoutReport
     template_name = "scouting/scoutreport-detail.html"
     context_object_name = "report"
+
+    queryset = ScoutReport.objects.select_related("player", "player__academy").prefetch_related("skills", "tags")
 
 
 class ScoutReportDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):

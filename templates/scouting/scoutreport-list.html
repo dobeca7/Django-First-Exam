@@ -23,6 +23,7 @@
                         <th>Scout</th>
                         <th>Rating</th>
                         <th>Recommendation</th>
+                        <th>Tags</th>
                         <th class="text-end">Actions</th>
                     </tr>
                     </thead>
@@ -33,6 +34,15 @@
                             <td>{{ report.scout_name }}</td>
                             <td>{{ report.rating }}</td>
                             <td>{{ report.get_recommendation_display }}</td>
+                            <td>
+                                {% if report.tags.exists %}
+                                    {% for tag in report.tags.all %}
+                                        <span class="badge text-bg-light border">{{ tag.name }}</span>
+                                    {% endfor %}
+                                {% else %}
+                                    <span class="text-soft">No tags</span>
+                                {% endif %}
+                            </td>
                             <td class="text-end">
                                 <a class="btn btn-sm btn-outline-dark" href="{% url 'report-detail' report.pk %}">Details</a>
                                 {% if perms.scouting.change_scoutreport %}
@@ -45,7 +55,7 @@
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="5" class="text-soft">No reports available.</td>
+                            <td colspan="6" class="text-soft">No reports available.</td>
                         </tr>
                     {% endfor %}
                     </tbody>

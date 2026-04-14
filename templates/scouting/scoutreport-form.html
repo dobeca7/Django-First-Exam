@@ -18,7 +18,7 @@
                             {% endfor %}
 
                             {% for field in form.visible_fields %}
-                                {% if field.name == "skills" %}
+                                {% if field.name == "skills" or field.name == "tags" %}
                                     <div class="mb-3">
                                         {{ field.label_tag }}
                                         {% if field.errors %}

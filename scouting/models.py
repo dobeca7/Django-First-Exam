@@ -3,6 +3,7 @@ from django.db import models
 from future_stars.models import TimeStampedModel
 from scouting.choices import PlayerSkills, RecommendationChoices
 
+
 class Skill(models.Model):
 
     name = models.CharField(max_length=50, unique=True)
@@ -10,6 +11,18 @@ class Skill(models.Model):
         max_length=50,
         choices=PlayerSkills,
     )
+
+    class Meta:
+        ordering = ("name",)
+
+    def __str__(self):
+        return self.name
+
+
+class Tag(models.Model):
+
+    name = models.CharField(max_length=50, unique=True)
+    description = models.CharField(max_length=150, blank=True)
 
     class Meta:
         ordering = ("name",)
@@ -27,6 +40,7 @@ class ScoutReport(TimeStampedModel):
     rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
 
     skills = models.ManyToManyField("scouting.Skill", related_name="reports", blank=True)
+    tags = models.ManyToManyField("scouting.Tag", related_name="reports", blank=True)
 
     notes = models.TextField(max_length=300, blank=True)
 
