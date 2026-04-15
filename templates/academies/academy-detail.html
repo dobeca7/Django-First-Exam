@@ -8,8 +8,12 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="h3 section-title mb-0">{{ academy.name }}</h1>
             <div class="d-flex gap-2">
-                <a class="btn btn-outline-primary" href="{% url 'academy-edit' academy.pk %}">Edit</a>
-                <a class="btn btn-outline-danger" href="{% url 'academy-delete' academy.pk %}">Delete</a>
+                {% if perms.academies.change_academy %}
+                    <a class="btn btn-outline-primary" href="{% url 'academy-edit' academy.pk %}">Edit</a>
+                {% endif %}
+                {% if perms.academies.delete_academy %}
+                    <a class="btn btn-outline-danger" href="{% url 'academy-delete' academy.pk %}">Delete</a>
+                {% endif %}
             </div>
         </div>
 
