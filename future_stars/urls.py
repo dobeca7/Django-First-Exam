@@ -16,15 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from future_stars.views import custom_404, home
+from future_stars.views import custom_404, custom_500, home
 
 urlpatterns = [
     path("", home, name="home"),
     path("accounts/", include("accounts.urls")),
     path("academies/", include("academies.urls")),
+    path("matches/", include("matches.urls")),
     path("players/", include("players.urls")),
     path("scouting/", include("scouting.urls")),
     path('admin/', admin.site.urls),
 ]
 
 handler404 = custom_404
+handler500 = custom_500

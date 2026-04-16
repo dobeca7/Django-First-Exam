@@ -15,6 +15,11 @@ class ScoutReportCreateView(LoginRequiredMixin, PermissionRequiredMixin, Success
     success_message = "Scout report created successfully."
     permission_required = "scouting.add_scoutreport"
 
+    def form_valid(self, form):
+        if not self.request.user.is_superuser:
+            form.instance.owner = self.request.user
+        return super().form_valid(form)
+
 
 class ScoutReportEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = ScoutReport
@@ -22,6 +27,12 @@ class ScoutReportEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVie
     template_name = "scouting/scoutreport-form.html"
     success_url = reverse_lazy("report-list")
     permission_required = "scouting.change_scoutreport"
+
+    def get_queryset(self):
+        queryset = ScoutReport.objects.select_related("player", "player__academy")
+        if self.request.user.is_superuser:
+            return queryset
+        return queryset.filter(owner=self.request.user)
 
 
 class ScoutReportListView(ListView):
@@ -31,7 +42,7 @@ class ScoutReportListView(ListView):
     paginate_by = 7
     queryset = (
         ScoutReport.objects.select_related("player", "player__academy")
-        .prefetch_related("skills", "tags")
+        .prefetch_related("skills")
         .order_by("-created_at")
     )
 
@@ -41,7 +52,7 @@ class ScoutReportDetailView(DetailView):
     template_name = "scouting/scoutreport-detail.html"
     context_object_name = "report"
 
-    queryset = ScoutReport.objects.select_related("player", "player__academy").prefetch_related("skills", "tags")
+    queryset = ScoutReport.objects.select_related("player", "player__academy").prefetch_related("skills")
 
 
 class ScoutReportDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -49,3 +60,9 @@ class ScoutReportDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteV
     template_name = "scouting/scoutreport-confirm-delete.html"
     success_url = reverse_lazy("report-list")
     permission_required = "scouting.delete_scoutreport"
+
+    def get_queryset(self):
+        queryset = ScoutReport.objects.select_related("player", "player__academy")
+        if self.request.user.is_superuser:
+            return queryset
+        return queryset.filter(owner=self.request.user)

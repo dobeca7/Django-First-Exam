@@ -1,4 +1,5 @@
 from datetime import date
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -13,6 +14,13 @@ def validate_max_year(value):
 
 
 class Academy(TimeStampedModel):
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="owned_academies",
+        null=True,
+        blank=True,
+    )
 
     name = models.CharField(max_length=100, unique=True)
 

@@ -39,10 +39,10 @@
                                 {% else %}
                                     <a class="btn btn-sm btn-outline-dark" href="{% url 'academy-detail' academy.pk %}">Details</a>
                                 {% endif %}
-                                {% if perms.academies.change_academy %}
+                                {% if request.user.is_superuser or academy.owner_id == request.user.id %}
                                     <a class="btn btn-sm btn-outline-primary" href="{% url 'academy-edit' academy.pk %}">Edit</a>
                                 {% endif %}
-                                {% if perms.academies.delete_academy %}
+                                {% if request.user.is_superuser or academy.owner_id == request.user.id %}
                                     <a class="btn btn-sm btn-outline-danger" href="{% url 'academy-delete' academy.pk %}">Delete</a>
                                 {% endif %}
                             </td>

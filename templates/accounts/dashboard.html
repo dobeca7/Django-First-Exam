@@ -1,6 +1,6 @@
 {% extends "common/base.html" %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Profile Details{% endblock %}
 
 {% block content %}
 <section class="py-5">
@@ -10,7 +10,11 @@
                 <div class="card card-modern h-100 border-0">
                     <div class="card-body p-4">
                         <h1 class="h3 section-title">{{ user.get_full_name|default:user.username }}</h1>
-                        <p class="text-soft mb-4">Private account area available only to authenticated users.</p>
+                        <p class="text-soft mb-4">Private profile details available only to authenticated users.</p>
+                        <div class="d-flex gap-2 mb-4">
+                            <a class="btn btn-outline-dark btn-sm" href="{% url 'account-dashboard' %}">Refresh Profile</a>
+                            <a class="btn btn-outline-primary btn-sm" href="{% url 'account-profile-edit' %}">Edit Profile</a>
+                        </div>
                         <dl class="mb-0">
                             <dt>Username</dt>
                             <dd>{{ user.username }}</dd>
@@ -20,6 +24,8 @@
                             <dd>{{ user.get_role_display }}</dd>
                             <dt>Favourite Position</dt>
                             <dd>{{ user.favorite_position|default:"-" }}</dd>
+                            <dt>Bio</dt>
+                            <dd>{{ user.bio|default:"No profile bio added yet." }}</dd>
                         </dl>
                     </div>
                 </div>
@@ -27,23 +33,23 @@
             <div class="col-lg-8">
                 <div class="card card-modern h-100 border-0">
                     <div class="card-body p-4">
-                        <h2 class="h4 section-title mb-3">Private tools</h2>
-                        <p class="text-soft">Your available actions depend on your group permissions.</p>
+                        <h2 class="h4 section-title mb-3">Profile Actions</h2>
+                        <p class="text-soft">Use these shortcuts to manage your private football workspace.</p>
                         <div class="d-flex flex-wrap gap-2">
                             <a class="btn btn-outline-primary" href="{% url 'account-profile-edit' %}">Edit Profile</a>
                             {% if perms.academies.add_academy %}
                                 <a class="btn btn-primary" href="{% url 'academy-create' %}">Create Academy</a>
                             {% endif %}
-                            {% if perms.players.add_player %}
+                            {% if request.user.is_superuser or request.user.owned_academies.exists %}
                                 <a class="btn btn-primary" href="{% url 'player-create' %}">Create Player</a>
                             {% endif %}
-                            {% if perms.scouting.add_scoutreport %}
+                            {% if request.user.is_superuser or request.user.role == 'scout' %}
                                 <a class="btn btn-primary" href="{% url 'report-create' %}">Create Report</a>
                             {% endif %}
                         </div>
                         <hr>
-                        <h3 class="h5 section-title">Bio</h3>
-                        <p class="mb-0">{{ user.bio|default:"No profile bio added yet." }}</p>
+                        <h3 class="h5 section-title">Role Summary</h3>
+                        <p class="mb-0">You are currently signed in as <strong>{{ user.get_role_display }}</strong>. The available tools above reflect this role.</p>
                     </div>
                 </div>
             </div>
@@ -51,4 +57,3 @@
     </div>
 </section>
 {% endblock %}
-

@@ -15,4 +15,3 @@ urlpatterns = [
     path("dashboard/", DashboardView.as_view(), name="account-dashboard"),
     path("profile/edit/", ProfileUpdateView.as_view(), name="account-profile-edit"),
 ]
-

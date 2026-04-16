@@ -1,0 +1,60 @@
+{% extends "common/base.html" %}
+
+{% block title %}Matches{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h1 class="h3 section-title mb-1">Matches</h1>
+                <p class="text-soft mb-0">Track academy fixtures and player participation in one place.</p>
+            </div>
+            <div class="d-flex gap-2">
+                {% if request.user.is_superuser or request.user.owned_academies.exists %}
+                    <a class="btn btn-primary" href="{% url 'match-create' %}">Create Match</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card card-modern border-0">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Fixture</th>
+                        <th>Date</th>
+                        <th>Location</th>
+                        <th>Competition</th>
+                        <th>Score</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for match in matches %}
+                        <tr>
+                            <td>{{ match.home_academy.name }} vs {{ match.away_academy.name }}</td>
+                            <td>{{ match.date|date:"d M Y" }}</td>
+                            <td>{{ match.location }}</td>
+                            <td>{{ match.competition|default:"Friendly" }}</td>
+                            <td>{{ match.home_score }} : {{ match.away_score }}</td>
+                            <td class="text-end">
+                                <a class="btn btn-sm btn-outline-dark" href="{% url 'match-detail' match.pk %}">Details</a>
+                                {% if request.user.is_superuser or match.home_academy.owner_id == request.user.id %}
+                                    <a class="btn btn-sm btn-outline-primary" href="{% url 'match-edit' match.pk %}">Edit</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-soft">No matches available.</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% include "common/_pagination.html" %}
+    </div>
+</section>
+{% endblock %}

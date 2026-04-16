@@ -11,7 +11,7 @@
             <div class="d-flex gap-2">
                 <a class="btn btn-outline-secondary" href="{% url 'player-compare' %}">Compare Players</a>
                 <a class="btn btn-outline-secondary" href="{% url 'player-top-list' %}">Top Players</a>
-                {% if perms.players.add_player %}
+                {% if request.user.is_superuser or request.user.owned_academies.exists %}
                     <a class="btn btn-primary" href="{% url 'player-create' %}">Create Player</a>
                 {% endif %}
             </div>
@@ -40,10 +40,10 @@
                             <td>{{ player.academy.name }}</td>
                             <td class="text-end">
                                 <a class="btn btn-sm btn-outline-dark" href="{% url 'player-detail' player.pk %}">Details</a>
-                                {% if perms.players.change_player %}
+                                {% if request.user.is_superuser or player.academy.owner_id == request.user.id %}
                                     <a class="btn btn-sm btn-outline-primary" href="{% url 'player-edit' player.pk %}">Edit</a>
                                 {% endif %}
-                                {% if perms.players.delete_player %}
+                                {% if request.user.is_superuser or player.academy.owner_id == request.user.id %}
                                     <a class="btn btn-sm btn-outline-danger" href="{% url 'player-delete' player.pk %}">Delete</a>
                                 {% endif %}
                             </td>

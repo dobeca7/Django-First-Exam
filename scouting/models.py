@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from future_stars.models import TimeStampedModel
@@ -19,19 +20,14 @@ class Skill(models.Model):
         return self.name
 
 
-class Tag(models.Model):
-
-    name = models.CharField(max_length=50, unique=True)
-    description = models.CharField(max_length=150, blank=True)
-
-    class Meta:
-        ordering = ("name",)
-
-    def __str__(self):
-        return self.name
-
-
 class ScoutReport(TimeStampedModel):
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="owned_reports",
+        null=True,
+        blank=True,
+    )
 
     player = models.ForeignKey("players.Player", on_delete=models.CASCADE, related_name="reports")
 
@@ -40,7 +36,6 @@ class ScoutReport(TimeStampedModel):
     rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
 
     skills = models.ManyToManyField("scouting.Skill", related_name="reports", blank=True)
-    tags = models.ManyToManyField("scouting.Tag", related_name="reports", blank=True)
 
     notes = models.TextField(max_length=300, blank=True)
 

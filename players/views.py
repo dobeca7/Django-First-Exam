@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.db.models import Avg
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.exceptions import PermissionDenied
+from django.db.models import Avg
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
 from players.forms import PlayerForm
@@ -15,6 +16,16 @@ class PlayerCreateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessa
     success_message = "Player created successfully."
     permission_required = "players.add_player"
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_superuser and not request.user.owned_academies.exists():
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
 
 class PlayerEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Player
@@ -22,6 +33,17 @@ class PlayerEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     template_name = "players/player-form.html"
     success_url = reverse_lazy("player-list")
     permission_required = "players.change_player"
+
+    def get_queryset(self):
+        queryset = Player.objects.select_related("academy")
+        if self.request.user.is_superuser:
+            return queryset
+        return queryset.filter(academy__owner=self.request.user)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
 
 class PlayerListView(ListView):
@@ -55,6 +77,12 @@ class PlayerDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     template_name = "players/player-confirm-delete.html"
     success_url = reverse_lazy("player-list")
     permission_required = "players.delete_player"
+
+    def get_queryset(self):
+        queryset = Player.objects.select_related("academy")
+        if self.request.user.is_superuser:
+            return queryset
+        return queryset.filter(academy__owner=self.request.user)
 
 
 class ComparePlayersView(TemplateView):
