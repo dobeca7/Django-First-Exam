@@ -13,7 +13,7 @@ from matches.models import Match, MatchParticipation
 class MatchOwnerAccessMixin:
     def can_manage_match(self, match):
         user = self.request.user
-        return user.is_superuser or match.home_academy.owner_id == user.id
+        return user.is_superuser or match.home_academy.owner_id == user.id or match.away_academy.owner_id == user.id
 
     def get_managed_match(self):
         match = get_object_or_404(Match.objects.select_related("home_academy", "away_academy"), pk=self.kwargs["match_pk"])
@@ -51,7 +51,11 @@ class MatchEditView(LoginRequiredMixin, UpdateView):
         queryset = Match.objects.select_related("home_academy", "away_academy")
         if self.request.user.is_superuser:
             return queryset
-        return queryset.filter(home_academy__owner=self.request.user)
+        return queryset.filter(
+            home_academy__owner=self.request.user
+        ) | queryset.filter(
+            away_academy__owner=self.request.user
+        )
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -87,7 +91,9 @@ class MatchDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         user = self.request.user
         context["can_manage_match"] = user.is_authenticated and (
-            user.is_superuser or self.object.home_academy.owner_id == user.id
+            user.is_superuser
+            or self.object.home_academy.owner_id == user.id
+            or self.object.away_academy.owner_id == user.id
         )
         return context
 
@@ -130,7 +136,9 @@ class MatchParticipationEditView(LoginRequiredMixin, SuccessMessageMixin, Update
         )
         if self.request.user.is_superuser:
             return queryset
-        return queryset.filter(match__home_academy__owner=self.request.user)
+        return queryset.filter(match__home_academy__owner=self.request.user) | queryset.filter(
+            match__away_academy__owner=self.request.user
+        )
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

@@ -45,19 +45,39 @@ class MatchForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
+        self._user = user
         self.fields["date"].input_formats = ["%Y-%m-%d"]
 
         if user and not user.is_superuser:
-            self.fields["home_academy"].queryset = user.owned_academies.order_by("name")
-            self.fields["away_academy"].queryset = Academy.objects.exclude(
-                pk__in=user.owned_academies.values_list("pk", flat=True)
-            ).order_by("name")
+            self.fields["home_academy"].queryset = Academy.objects.order_by("name")
+            self.fields["away_academy"].queryset = Academy.objects.order_by("name")
+            self.fields["home_academy"].help_text = "Choose one of your academies or another academy as the home side."
+            self.fields["away_academy"].help_text = "Choose one of your academies or another academy as the away side."
 
     def clean_date(self):
         match_date = self.cleaned_data.get("date")
-        if match_date and match_date < timezone.localdate():
-            raise forms.ValidationError("Please choose today or a future match date.")
+        if match_date and match_date > timezone.localdate():
+            raise forms.ValidationError("Please choose today or a past match date.")
         return match_date
+
+    def clean(self):
+        cleaned_data = super().clean()
+        home_academy = cleaned_data.get("home_academy")
+        away_academy = cleaned_data.get("away_academy")
+
+        if home_academy and away_academy and home_academy == away_academy:
+            self.add_error("away_academy", "The away academy must be different from the home academy.")
+
+        user = getattr(self, "_user", None)
+        if user and not user.is_superuser:
+            owned_ids = set(user.owned_academies.values_list("id", flat=True))
+            selected_ids = {academy.id for academy in (home_academy, away_academy) if academy}
+            if selected_ids and not (selected_ids & owned_ids):
+                error_message = "One of the two academies must be your own academy."
+                self.add_error("home_academy", error_message)
+                self.add_error("away_academy", error_message)
+
+        return cleaned_data
 
 class MatchParticipationForm(forms.ModelForm):
     class Meta:

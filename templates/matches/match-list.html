@@ -40,7 +40,7 @@
                             <td>{{ match.home_score }} : {{ match.away_score }}</td>
                             <td class="text-end">
                                 <a class="btn btn-sm btn-outline-dark" href="{% url 'match-detail' match.pk %}">Details</a>
-                                {% if request.user.is_superuser or match.home_academy.owner_id == request.user.id %}
+                                {% if request.user.is_superuser or match.home_academy.owner_id == request.user.id or match.away_academy.owner_id == request.user.id %}
                                     <a class="btn btn-sm btn-outline-primary" href="{% url 'match-edit' match.pk %}">Edit</a>
                                 {% endif %}
                             </td>

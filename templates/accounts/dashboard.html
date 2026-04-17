@@ -12,7 +12,6 @@
                         <h1 class="h3 section-title">{{ user.get_full_name|default:user.username }}</h1>
                         <p class="text-soft mb-4">Private profile details available only to authenticated users.</p>
                         <div class="d-flex gap-2 mb-4">
-                            <a class="btn btn-outline-dark btn-sm" href="{% url 'account-dashboard' %}">Refresh Profile</a>
                             <a class="btn btn-outline-primary btn-sm" href="{% url 'account-profile-edit' %}">Edit Profile</a>
                         </div>
                         <dl class="mb-0">
