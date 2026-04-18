@@ -12,6 +12,7 @@
                         <p>Are you sure you want to delete <strong>{{ object.name }}</strong>?</p>
                         <form method="post">
                             {% csrf_token %}
+                            {{ form.as_p }}
                             <button class="btn btn-danger" type="submit">Yes, delete</button>
                             <a class="btn btn-outline-secondary" href="{% url 'player-detail' object.pk %}">Cancel</a>
                         </form>

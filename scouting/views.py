@@ -5,6 +5,7 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 
 from scouting.forms import ScoutReportForm
 from scouting.models import ScoutReport
+from scouting.tasks import update_player_report_stats
 
 
 class ScoutReportCreateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, CreateView):
@@ -18,7 +19,9 @@ class ScoutReportCreateView(LoginRequiredMixin, PermissionRequiredMixin, Success
     def form_valid(self, form):
         if not self.request.user.is_superuser:
             form.instance.owner = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        update_player_report_stats.delay(self.object.player_id)
+        return response
 
 
 class ScoutReportEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -33,6 +36,11 @@ class ScoutReportEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVie
         if self.request.user.is_superuser:
             return queryset
         return queryset.filter(owner=self.request.user)
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        update_player_report_stats.delay(self.object.player_id)
+        return response
 
 
 class ScoutReportListView(ListView):
@@ -66,3 +74,10 @@ class ScoutReportDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteV
         if self.request.user.is_superuser:
             return queryset
         return queryset.filter(owner=self.request.user)
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        player_id = self.object.player_id
+        response = super().delete(request, *args, **kwargs)
+        update_player_report_stats.delay(player_id)
+        return response

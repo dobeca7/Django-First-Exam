@@ -4,7 +4,7 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Avg
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
-from players.forms import PlayerForm
+from players.forms import PlayerDeleteForm, PlayerForm
 from players.models import Player
 
 
@@ -83,6 +83,11 @@ class PlayerDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
         if self.request.user.is_superuser:
             return queryset
         return queryset.filter(academy__owner=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = PlayerDeleteForm(instance=self.object)
+        return context
 
 
 class ComparePlayersView(TemplateView):

@@ -38,6 +38,10 @@ class Player(TimeStampedModel):
 
     potential = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(100)])
 
+    average_report_rating = models.DecimalField(max_digits=4, decimal_places=2, default=0)
+
+    report_count = models.PositiveIntegerField(default=0)
+
     academy = models.ForeignKey("academies.Academy", on_delete=models.CASCADE, related_name="players")
 
     class Meta:

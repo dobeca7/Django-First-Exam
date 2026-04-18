@@ -62,3 +62,25 @@ class PlayerForm(forms.ModelForm):
         if not (1 <= weight <= 200):
             raise forms.ValidationError("Weight must be between 1 and 200 kg.")
         return weight
+
+
+class PlayerDeleteForm(forms.ModelForm):
+    class Meta:
+        model = Player
+        fields = (
+            "name",
+            "academy",
+            "position",
+            "potential",
+        )
+        labels = {
+            "potential": "Potential (1-100)",
+        }
+        help_texts = {
+            "academy": "Read-only academy assignment for confirmation before deletion.",
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.disabled = True
