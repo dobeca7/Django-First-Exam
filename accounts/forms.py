@@ -97,18 +97,3 @@ class AppUserAdminChangeForm(UserChangeForm):
         model = AppUser
         fields = "__all__"
 
-
-class AccountDetailsForm(forms.ModelForm):
-    class Meta:
-        model = AppUser
-        fields = (
-            "username",
-            "email",
-            "role",
-            "favorite_position",
-        )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.disabled = True

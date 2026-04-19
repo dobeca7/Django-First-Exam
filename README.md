@@ -9,6 +9,7 @@ Future Football Stars is a Django web application for managing football academie
 - `python-dotenv`
 - Celery
 - Redis
+- WhiteNoise
 
 ## Project Structure
 - `future_stars/` - project settings, root URLs, shared project-level code
@@ -23,16 +24,23 @@ Future Football Stars is a Django web application for managing football academie
 - Private account dashboard for authenticated users
 - User registration, login, logout, and profile editing
 - Extended custom user model with football-related profile fields
-- Predefined admin groups: `Academy Managers` and `Scouts`
+- Predefined admin groups: `Academy Managers`, `Scouts`, and `Analysts`
+- Match management and match participation management
 - Top players page (filtered by potential)
 - Compare players page (2-3 players side by side)
 - Custom template tag for player stars based on average report rating
+- Two DRF API endpoints
+- Custom 404 and 500 pages
+- Responsive UI built with Django templates and Bootstrap
+- Asynchronous player stat recalculation after scout report changes
+- Static files served in production through WhiteNoise
 
 
 ## Prerequisites
 - Python installed
 - PostgreSQL installed and running
 - A PostgreSQL database created
+- Redis running locally for Celery tasks
 
 ## Environment Variables
 Create a `.env` file in the project root. You can copy `.envtemplate` and fill values:
@@ -91,19 +99,25 @@ pip install -r requirements.txt
 python manage.py migrate
 ```
 
-4. Run the server:
+4. Collect static files:
+
+```powershell
+python manage.py collectstatic --noinput
+```
+
+5. Run the server:
 
 ```powershell
 python manage.py runserver
 ```
 
-5. Start the Celery worker in a second terminal:
+6. Start the Celery worker in a second terminal:
 
 ```powershell
 celery -A future_stars worker --pool=solo --loglevel=info
 ```
 
-6. Open in browser:
+7. Open in browser:
 - `http://127.0.0.1:8000/`
 - `http://127.0.0.1:8000/admin/`
 
@@ -117,11 +131,43 @@ python manage.py createsuperuser
 python manage.py check
 ```
 
+## Running Tests
+The project currently includes 26 automated tests across the `accounts`, `academies`, `players`, and `scouting` apps.
+
+Run all implemented tests with:
+
+```powershell
+python manage.py test accounts academies players scouting
+```
+
 ## Asynchronous Task Processing
 The project uses `Celery` with `Redis` for asynchronous background processing.
 
-When a new scout report is created, a Celery task recalculates and stores:
+When a scout report is created, edited, or deleted, a Celery task recalculates and stores:
 - the player's average scout report rating
 - the total number of scout reports for that player
 
 The task is executed by the Celery worker and does not block the HTTP request.
+
+## Static and Media Files
+Static files are stored in the project's `staticfiles/` directory and collected into `static_root/` during deployment.
+
+Production static file serving is handled by `WhiteNoise`, which serves:
+- project static assets
+- Django admin static assets
+- third-party package static assets
+
+The current project uses static assets, including the home page hero image, but does not currently include uploaded media fields such as `ImageField` or `FileField`.
+
+## Security Notes
+The project relies on Django's built-in protections together with server-side access control:
+- SQL injection protection through Django ORM queries instead of raw SQL
+- XSS protection through Django template auto-escaping
+- CSRF protection through `CsrfViewMiddleware` and `{% csrf_token %}` in forms
+- parameter tampering protection through owner-filtered querysets, permission checks, and form validation
+- sensitive configuration stored in environment variables instead of hardcoded secrets
+
+## Notes for Evaluation
+- The application requires PostgreSQL for the database connection.
+- The asynchronous task flow requires both Redis and a running Celery worker.
+- Static files require `collectstatic` before production deployment.

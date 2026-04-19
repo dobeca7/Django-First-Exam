@@ -75,9 +75,8 @@ class ScoutReportDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteV
             return queryset
         return queryset.filter(owner=self.request.user)
 
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
+    def form_valid(self, form):
         player_id = self.object.player_id
-        response = super().delete(request, *args, **kwargs)
+        response = super().form_valid(form)
         update_player_report_stats.delay(player_id)
         return response
