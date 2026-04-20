@@ -1,4 +1,3 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Prefetch
@@ -6,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
+from future_stars.mixins import AccountRequiredMixin
 from matches.forms import MatchForm, MatchParticipationForm
 from matches.models import Match, MatchParticipation
 
@@ -22,7 +22,7 @@ class MatchOwnerAccessMixin:
         return match
 
 
-class MatchCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+class MatchCreateView(AccountRequiredMixin, SuccessMessageMixin, CreateView):
     model = Match
     form_class = MatchForm
     template_name = "matches/match-form.html"
@@ -42,7 +42,7 @@ class MatchCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return reverse("match-detail", args=[self.object.pk])
 
 
-class MatchEditView(LoginRequiredMixin, UpdateView):
+class MatchEditView(AccountRequiredMixin, UpdateView):
     model = Match
     form_class = MatchForm
     template_name = "matches/match-form.html"
@@ -66,7 +66,7 @@ class MatchEditView(LoginRequiredMixin, UpdateView):
         return reverse("match-detail", args=[self.object.pk])
 
 
-class MatchListView(ListView):
+class MatchListView(AccountRequiredMixin, ListView):
     model = Match
     template_name = "matches/match-list.html"
     context_object_name = "matches"
@@ -76,7 +76,7 @@ class MatchListView(ListView):
         return Match.objects.select_related("home_academy", "away_academy").order_by("date")
 
 
-class MatchDetailView(DetailView):
+class MatchDetailView(AccountRequiredMixin, DetailView):
     model = Match
     template_name = "matches/match-detail.html"
     context_object_name = "match"
@@ -98,7 +98,7 @@ class MatchDetailView(DetailView):
         return context
 
 
-class MatchParticipationCreateView(LoginRequiredMixin, MatchOwnerAccessMixin, SuccessMessageMixin, CreateView):
+class MatchParticipationCreateView(AccountRequiredMixin, MatchOwnerAccessMixin, SuccessMessageMixin, CreateView):
     model = MatchParticipation
     form_class = MatchParticipationForm
     template_name = "matches/matchparticipation-form.html"
@@ -121,7 +121,7 @@ class MatchParticipationCreateView(LoginRequiredMixin, MatchOwnerAccessMixin, Su
         return reverse("match-detail", args=[self.match.pk])
 
 
-class MatchParticipationEditView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class MatchParticipationEditView(AccountRequiredMixin, SuccessMessageMixin, UpdateView):
     model = MatchParticipation
     form_class = MatchParticipationForm
     template_name = "matches/matchparticipation-form.html"

@@ -62,6 +62,9 @@
                                         <td>{{ participation.assists }}</td>
                                         <td class="text-end">
                                             <a class="btn btn-sm btn-outline-dark" href="{% url 'player-detail' participation.player.pk %}">Player</a>
+                                            {% if user.is_authenticated and perms.scouting.add_scoutreport %}
+                                                <a class="btn btn-sm btn-outline-success" href="{% url 'report-create' %}?player={{ participation.player.pk }}">Scout Report</a>
+                                            {% endif %}
                                             {% if can_manage_match %}
                                                 <a class="btn btn-sm btn-outline-primary" href="{% url 'match-participation-edit' participation.pk %}">Edit</a>
                                             {% endif %}

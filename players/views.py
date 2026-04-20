@@ -1,14 +1,15 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Avg
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
+from future_stars.mixins import AccountRequiredMixin
 from players.forms import PlayerDeleteForm, PlayerForm
 from players.models import Player
 
 
-class PlayerCreateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, CreateView):
+class PlayerCreateView(AccountRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = Player
     form_class = PlayerForm
     template_name = "players/player-form.html"
@@ -27,7 +28,7 @@ class PlayerCreateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessa
         return kwargs
 
 
-class PlayerEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class PlayerEditView(AccountRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Player
     form_class = PlayerForm
     template_name = "players/player-form.html"
@@ -46,7 +47,7 @@ class PlayerEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
         return kwargs
 
 
-class PlayerListView(ListView):
+class PlayerListView(AccountRequiredMixin, ListView):
     model = Player
     template_name = "players/player-list.html"
     context_object_name = "players"
@@ -56,7 +57,7 @@ class PlayerListView(ListView):
                 .order_by("-potential", "name"))
 
 
-class TopPlayerListView(ListView):
+class TopPlayerListView(AccountRequiredMixin, ListView):
     model = Player
     template_name = "players/top-player-list.html"
     context_object_name = "players"
@@ -66,13 +67,13 @@ class TopPlayerListView(ListView):
                 .order_by("-potential", "name"))
 
 
-class PlayerDetailView(DetailView):
+class PlayerDetailView(AccountRequiredMixin, DetailView):
     model = Player
     template_name = "players/player-detail.html"
     context_object_name = "player"
 
 
-class PlayerDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class PlayerDeleteView(AccountRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Player
     template_name = "players/player-confirm-delete.html"
     success_url = reverse_lazy("player-list")
@@ -90,7 +91,7 @@ class PlayerDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
         return context
 
 
-class ComparePlayersView(TemplateView):
+class ComparePlayersView(AccountRequiredMixin, TemplateView):
     template_name = "players/player-compare.html"
 
     def get_context_data(self, **kwargs):

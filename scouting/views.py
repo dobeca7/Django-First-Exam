@@ -1,20 +1,28 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
+from future_stars.mixins import AccountRequiredMixin
 from scouting.forms import ScoutReportForm
 from scouting.models import ScoutReport
 from scouting.tasks import update_player_report_stats
 
 
-class ScoutReportCreateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, CreateView):
+class ScoutReportCreateView(AccountRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = ScoutReport
     form_class = ScoutReportForm
     template_name = "scouting/scoutreport-form.html"
     success_url = reverse_lazy("report-list")
     success_message = "Scout report created successfully."
     permission_required = "scouting.add_scoutreport"
+
+    def get_initial(self):
+        initial = super().get_initial()
+        player_id = self.request.GET.get("player")
+        if player_id:
+            initial["player"] = player_id
+        return initial
 
     def form_valid(self, form):
         if not self.request.user.is_superuser:
@@ -24,7 +32,7 @@ class ScoutReportCreateView(LoginRequiredMixin, PermissionRequiredMixin, Success
         return response
 
 
-class ScoutReportEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class ScoutReportEditView(AccountRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = ScoutReport
     form_class = ScoutReportForm
     template_name = "scouting/scoutreport-form.html"
@@ -43,7 +51,7 @@ class ScoutReportEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVie
         return response
 
 
-class ScoutReportListView(ListView):
+class ScoutReportListView(AccountRequiredMixin, ListView):
     model = ScoutReport
     template_name = "scouting/scoutreport-list.html"
     context_object_name = "reports"
@@ -55,7 +63,7 @@ class ScoutReportListView(ListView):
     )
 
 
-class ScoutReportDetailView(DetailView):
+class ScoutReportDetailView(AccountRequiredMixin, DetailView):
     model = ScoutReport
     template_name = "scouting/scoutreport-detail.html"
     context_object_name = "report"
@@ -63,7 +71,7 @@ class ScoutReportDetailView(DetailView):
     queryset = ScoutReport.objects.select_related("player", "player__academy").prefetch_related("skills")
 
 
-class ScoutReportDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class ScoutReportDeleteView(AccountRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = ScoutReport
     template_name = "scouting/scoutreport-confirm-delete.html"
     success_url = reverse_lazy("report-list")

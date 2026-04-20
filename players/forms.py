@@ -1,7 +1,4 @@
-from datetime import date
-
 from django import forms
-
 from players.models import Player
 
 
@@ -20,7 +17,17 @@ class PlayerForm(forms.ModelForm):
 
     class Meta:
         model = Player
-        fields = '__all__'
+        fields = (
+            "name",
+            "birth_date",
+            "nationality",
+            "height",
+            "weight",
+            "position",
+            "dominant_foot",
+            "potential",
+            "academy",
+        )
         labels = {
             "height": "Height (cm)",
             "weight": "Weight (kg)",

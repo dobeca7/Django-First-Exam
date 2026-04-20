@@ -74,6 +74,8 @@ class AcademiesAppTests(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_academy_detail_view_when_accessed_by_slug_should_return_success_and_correct_academy_in_context(self):
+        self.client.force_login(self.owner)
+
         response = self.client.get(reverse("academy-detail-slug", kwargs={"slug": self.academy.slug}))
 
         self.assertEqual(response.status_code, 200)

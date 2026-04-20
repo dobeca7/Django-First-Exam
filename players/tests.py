@@ -93,6 +93,8 @@ class PlayerAppTests(TestCase):
             [self.academy],
             transform=lambda academy: academy,
         )
+        self.assertNotIn("average_report_rating", form.fields)
+        self.assertNotIn("report_count", form.fields)
 
     def test_player_form_when_height_is_over_maximum_should_be_invalid_with_expected_height_error_message(self):
         form = PlayerForm(
@@ -106,8 +108,6 @@ class PlayerAppTests(TestCase):
                 "dominant_foot": Player.DominantFootChoices.RIGHT,
                 "potential": 80,
                 "academy": self.academy.pk,
-                "average_report_rating": 0,
-                "report_count": 0,
             },
             user=self.owner,
         )
@@ -150,6 +150,8 @@ class PlayerAppTests(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_compare_players_view_when_more_than_three_players_are_selected_should_show_exact_selection_error_message(self):
+        self.client.force_login(self.owner)
+
         player_two = Player.objects.create(
             name="Second Player",
             birth_date=date(2006, 6, 6),

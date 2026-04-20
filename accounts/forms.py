@@ -96,4 +96,3 @@ class AppUserAdminChangeForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
         model = AppUser
         fields = "__all__"
-
