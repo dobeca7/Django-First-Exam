@@ -1,7 +1,10 @@
+from academies.models import Academy
+from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Avg
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
 from future_stars.mixins import AccountRequiredMixin
@@ -18,11 +21,26 @@ class PlayerCreateView(AccountRequiredMixin, PermissionRequiredMixin, SuccessMes
     permission_required = "players.add_player"
 
     def dispatch(self, request, *args, **kwargs):
-        if (
-            not request.user.is_superuser
-            and request.user.role != "analyst"
-            and not request.user.owned_academies.exists()
-        ):
+        if request.user.is_superuser:
+            return super().dispatch(request, *args, **kwargs)
+
+        if request.user.role == "analyst":
+            if not Academy.objects.exists():
+                messages.warning(
+                    request,
+                    "A player cannot be created until at least one academy exists.",
+                )
+                return redirect("home")
+            return super().dispatch(request, *args, **kwargs)
+
+        if request.user.role == "academy_manager" and not request.user.owned_academies.exists():
+            messages.warning(
+                request,
+                "Create an academy before adding players to your squad.",
+            )
+            return redirect("academy-create")
+
+        if not request.user.owned_academies.exists():
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
