@@ -96,6 +96,15 @@ class PlayerAppTests(TestCase):
         self.assertNotIn("average_report_rating", form.fields)
         self.assertNotIn("report_count", form.fields)
 
+    def test_player_form_when_initialized_for_analyst_should_allow_all_academies(self):
+        form = PlayerForm(user=self.other_user)
+
+        self.assertQuerySetEqual(
+            form.fields["academy"].queryset.order_by("pk"),
+            [self.academy, self.other_academy],
+            transform=lambda academy: academy,
+        )
+
     def test_player_form_when_height_is_over_maximum_should_be_invalid_with_expected_height_error_message(self):
         form = PlayerForm(
             data={
@@ -120,7 +129,7 @@ class PlayerAppTests(TestCase):
 
         self.assertTrue(all(field.disabled for field in form.fields.values()))
 
-    def test_player_create_view_when_logged_in_user_has_no_owned_academies_should_return_permission_denied_response(self):
+    def test_player_create_view_when_analyst_has_add_permission_should_allow_access_without_owned_academy(self):
         user_without_academy = AppUser.objects.create_user(
             username="noacademy",
             password="testpass123",
@@ -132,7 +141,7 @@ class PlayerAppTests(TestCase):
 
         response = self.client.get(reverse("player-create"))
 
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 200)
 
     def test_player_edit_view_when_anonymous_user_requests_page_should_redirect_to_login(self):
         response = self.client.get(reverse("player-edit", args=[self.player.pk]))

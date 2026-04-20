@@ -8,7 +8,10 @@ class PlayerForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         if user and not user.is_superuser:
-            self.fields["academy"].queryset = user.owned_academies.order_by("name")
+            if user.role == "analyst":
+                self.fields["academy"].queryset = self.fields["academy"].queryset.order_by("name")
+            else:
+                self.fields["academy"].queryset = user.owned_academies.order_by("name")
 
     birth_date = forms.DateField(
         input_formats=["%Y-%m-%d"],

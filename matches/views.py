@@ -13,7 +13,11 @@ from matches.models import Match, MatchParticipation
 class MatchOwnerAccessMixin:
     def can_manage_match(self, match):
         user = self.request.user
-        return user.is_superuser or match.home_academy.owner_id == user.id or match.away_academy.owner_id == user.id
+        return user.is_authenticated and (
+            user.is_superuser
+            or match.home_academy.owner_id == user.id
+            or match.away_academy.owner_id == user.id
+        )
 
     def get_managed_match(self):
         match = get_object_or_404(Match.objects.select_related("home_academy", "away_academy"), pk=self.kwargs["match_pk"])
@@ -66,7 +70,7 @@ class MatchEditView(AccountRequiredMixin, UpdateView):
         return reverse("match-detail", args=[self.object.pk])
 
 
-class MatchListView(AccountRequiredMixin, ListView):
+class MatchListView(ListView):
     model = Match
     template_name = "matches/match-list.html"
     context_object_name = "matches"
@@ -76,7 +80,7 @@ class MatchListView(AccountRequiredMixin, ListView):
         return Match.objects.select_related("home_academy", "away_academy").order_by("date")
 
 
-class MatchDetailView(AccountRequiredMixin, DetailView):
+class MatchDetailView(DetailView):
     model = Match
     template_name = "matches/match-detail.html"
     context_object_name = "match"

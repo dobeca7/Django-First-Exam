@@ -41,14 +41,14 @@ class AcademyEditView(AccountRequiredMixin, PermissionRequiredMixin, UpdateView)
     def get_success_url(self):
         return reverse("academy-detail-slug", kwargs={"slug": self.object.slug})
 
-class AcademyListView(AccountRequiredMixin, ListView):
+class AcademyListView(ListView):
     model = Academy
     queryset = Academy.objects.order_by("name")
     template_name = "academies/academy-list.html"
     context_object_name = "academies"
     paginate_by = 7
 
-class AcademyDetailView(AccountRequiredMixin, DetailView):
+class AcademyDetailView(DetailView):
     model = Academy
     template_name = "academies/academy-detail.html"
     context_object_name = "academy"

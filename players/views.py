@@ -18,7 +18,11 @@ class PlayerCreateView(AccountRequiredMixin, PermissionRequiredMixin, SuccessMes
     permission_required = "players.add_player"
 
     def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_superuser and not request.user.owned_academies.exists():
+        if (
+            not request.user.is_superuser
+            and request.user.role != "analyst"
+            and not request.user.owned_academies.exists()
+        ):
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
@@ -47,7 +51,7 @@ class PlayerEditView(AccountRequiredMixin, PermissionRequiredMixin, UpdateView):
         return kwargs
 
 
-class PlayerListView(AccountRequiredMixin, ListView):
+class PlayerListView(ListView):
     model = Player
     template_name = "players/player-list.html"
     context_object_name = "players"
@@ -57,7 +61,7 @@ class PlayerListView(AccountRequiredMixin, ListView):
                 .order_by("-potential", "name"))
 
 
-class TopPlayerListView(AccountRequiredMixin, ListView):
+class TopPlayerListView(ListView):
     model = Player
     template_name = "players/top-player-list.html"
     context_object_name = "players"
@@ -67,7 +71,7 @@ class TopPlayerListView(AccountRequiredMixin, ListView):
                 .order_by("-potential", "name"))
 
 
-class PlayerDetailView(AccountRequiredMixin, DetailView):
+class PlayerDetailView(DetailView):
     model = Player
     template_name = "players/player-detail.html"
     context_object_name = "player"
@@ -91,7 +95,7 @@ class PlayerDeleteView(AccountRequiredMixin, PermissionRequiredMixin, DeleteView
         return context
 
 
-class ComparePlayersView(AccountRequiredMixin, TemplateView):
+class ComparePlayersView(TemplateView):
     template_name = "players/player-compare.html"
 
     def get_context_data(self, **kwargs):

@@ -29,6 +29,7 @@ class AppUser(AbstractUser):
             "view_academy",
         ],
         "Analysts": [
+            "add_player",
             "view_academy",
             "view_player",
             "view_scoutreport",

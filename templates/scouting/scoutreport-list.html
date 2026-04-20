@@ -8,7 +8,7 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="h3 section-title mb-0">Scout Reports</h1>
             <div class="d-flex gap-2">
-                {% if request.user.is_superuser or request.user.role == 'scout' %}
+                {% if request.user.is_authenticated and request.user.is_superuser or request.user.is_authenticated and request.user.role == 'scout' %}
                     <a class="btn btn-primary" href="{% url 'report-create' %}">Create Report</a>
                 {% endif %}
             </div>
@@ -35,10 +35,10 @@
                             <td>{{ report.get_recommendation_display }}</td>
                             <td class="text-end">
                                 <a class="btn btn-sm btn-outline-dark" href="{% url 'report-detail' report.pk %}">Details</a>
-                                {% if request.user.is_superuser or report.owner_id == request.user.id %}
+                                {% if request.user.is_authenticated and request.user.is_superuser or request.user.is_authenticated and report.owner_id == request.user.id %}
                                     <a class="btn btn-sm btn-outline-primary" href="{% url 'report-edit' report.pk %}">Edit</a>
                                 {% endif %}
-                                {% if request.user.is_superuser or report.owner_id == request.user.id %}
+                                {% if request.user.is_authenticated and request.user.is_superuser or request.user.is_authenticated and report.owner_id == request.user.id %}
                                     <a class="btn btn-sm btn-outline-danger" href="{% url 'report-delete' report.pk %}">Delete</a>
                                 {% endif %}
                             </td>

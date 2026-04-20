@@ -8,10 +8,10 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="h3 section-title mb-0">{{ academy.name }}</h1>
             <div class="d-flex gap-2">
-                {% if request.user.is_superuser or academy.owner_id == request.user.id %}
+                {% if request.user.is_authenticated and request.user.is_superuser or request.user.is_authenticated and academy.owner_id == request.user.id %}
                     <a class="btn btn-outline-primary" href="{% url 'academy-edit' academy.pk %}">Edit</a>
                 {% endif %}
-                {% if request.user.is_superuser or academy.owner_id == request.user.id %}
+                {% if request.user.is_authenticated and request.user.is_superuser or request.user.is_authenticated and academy.owner_id == request.user.id %}
                     <a class="btn btn-outline-danger" href="{% url 'academy-delete' academy.pk %}">Delete</a>
                 {% endif %}
             </div>

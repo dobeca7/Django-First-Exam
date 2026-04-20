@@ -51,7 +51,7 @@ class ScoutReportEditView(AccountRequiredMixin, PermissionRequiredMixin, UpdateV
         return response
 
 
-class ScoutReportListView(AccountRequiredMixin, ListView):
+class ScoutReportListView(ListView):
     model = ScoutReport
     template_name = "scouting/scoutreport-list.html"
     context_object_name = "reports"
@@ -63,7 +63,7 @@ class ScoutReportListView(AccountRequiredMixin, ListView):
     )
 
 
-class ScoutReportDetailView(AccountRequiredMixin, DetailView):
+class ScoutReportDetailView(DetailView):
     model = ScoutReport
     template_name = "scouting/scoutreport-detail.html"
     context_object_name = "report"
