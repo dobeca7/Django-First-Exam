@@ -1,9 +1,9 @@
-SECRET_KEY=django-insecure-change-me
+SECRET_KEY=replace-with-your-secret-key
 ALLOWED_HOSTS=127.0.0.1,localhost
 CSRF_TRUSTED_ORIGINS=http://127.0.0.1,http://localhost
 DB_NAME=future_stars
-DB_PASS=postgres
-DB_USER=postgres
+DB_PASS=replace-with-your-db-password
+DB_USER=replace-with-your-db-user
 DB_HOST=127.0.0.1
 DB_PORT=5432
 DEBUG=True

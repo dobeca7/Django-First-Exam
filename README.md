@@ -6,6 +6,10 @@ Future Football Stars is a Django web application for managing football academie
 - Application URL: `http://16.170.194.209/`
 - Admin URL: `http://16.170.194.209/admin/`
 
+## Important Usage Notes
+- Create an academy first. Players cannot be created until at least one academy exists.
+- Create a player before creating scout reports. Scout reports cannot be created until at least one player exists.
+
 ## Tech Stack
 - Python 3.12+
 - Django 6.0.2
@@ -57,12 +61,12 @@ Copy-Item .envtemplate .env
 Minimal local `.env`:
 
 ```env
-SECRET_KEY=django-insecure-change-me
+SECRET_KEY=replace-with-your-secret-key
 ALLOWED_HOSTS=127.0.0.1,localhost
 CSRF_TRUSTED_ORIGINS=http://127.0.0.1,http://localhost
 DB_NAME=future_stars
-DB_PASS=postgres
-DB_USER=postgres
+DB_PASS=replace-with-your-db-password
+DB_USER=replace-with-your-db-user
 DB_HOST=127.0.0.1
 DB_PORT=5432
 DEBUG=True
@@ -75,7 +79,56 @@ Notes:
 - Local PostgreSQL and Redis must be running.
 - For Docker Compose deployment, the same variable names are used.
 
-## Local Setup
+## Recommended Setup
+The recommended way to run the project is Docker Compose. It starts Django, PostgreSQL, Redis, Celery, and Nginx together and is the closest match to the deployed environment.
+
+1. Copy the environment template if needed:
+
+```powershell
+Copy-Item .envtemplate .env
+```
+
+2. Build and start the containers:
+
+```powershell
+docker compose up -d --build
+```
+
+3. Apply migrations:
+
+```powershell
+docker compose exec web python manage.py migrate
+```
+
+4. Collect static files:
+
+```powershell
+docker compose exec web python manage.py collectstatic --noinput
+```
+
+5. Create a superuser if needed:
+
+```powershell
+docker compose exec web python manage.py createsuperuser
+```
+
+6. Open:
+- `http://127.0.0.1/`
+- `http://127.0.0.1/admin/`
+
+7. Stop the stack:
+
+```powershell
+docker compose down
+```
+
+Important:
+- `docker-compose.yml` uses environment variables with safe local defaults.
+- For real deployment, set `SECRET_KEY`, `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS`, and database credentials explicitly.
+
+## Manual Local Setup
+Use this setup only if you prefer running PostgreSQL, Redis, Django, and Celery manually outside Docker.
+
 1. Create and activate a virtual environment:
 
 ```powershell
@@ -129,45 +182,6 @@ celery -A future_stars worker --pool=solo --loglevel=info
 python manage.py createsuperuser
 ```
 
-## Docker Compose Setup
-The repository also includes a Docker-based production-style setup with Django, PostgreSQL, Redis, Celery, and Nginx.
-
-1. Review `docker-compose.yml`.
-2. Adjust environment variables in your shell or `.env` file if needed.
-3. Build and start:
-
-```powershell
-docker compose up -d --build
-```
-
-4. Apply migrations:
-
-```powershell
-docker compose exec web python manage.py migrate
-```
-
-5. Collect static files:
-
-```powershell
-docker compose exec web python manage.py collectstatic --noinput
-```
-
-6. Create a superuser if needed:
-
-```powershell
-docker compose exec web python manage.py createsuperuser
-```
-
-7. Stop the stack:
-
-```powershell
-docker compose down
-```
-
-Important:
-- `docker-compose.yml` uses environment variables with safe local defaults.
-- For real deployment, set `SECRET_KEY`, `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS`, and database credentials explicitly.
-
 ## API Endpoints
 - `GET /api/players/` - public player list API
 - `GET /api/reports/` - authenticated scout report list API
@@ -202,20 +216,6 @@ When a scout report is created, edited, or deleted, a Celery task recalculates:
 
 The project currently uses static files but does not include uploaded media models such as `ImageField` or `FileField`.
 
-## Security Notes
-- SQL injection protection through Django ORM usage
-- XSS protection through Django template auto-escaping
-- CSRF protection through middleware and `{% csrf_token %}`
-- Parameter tampering protection through permission checks, owner-filtered querysets, and form validation
-- Sensitive configuration is read from environment variables
-
 ## Deployment Notes
 - The deployed version is expected to run on a cloud host with PostgreSQL, Redis, Celery, and Nginx
-- Keep the deployed app synchronized with the GitHub repository before submission
 - If the public host changes, update `ALLOWED_HOSTS` and `CSRF_TRUSTED_ORIGINS`
-
-## Evaluation Notes
-- The project contains five Django apps and multiple relational models
-- It includes public and private sections
-- It uses CBVs as the main view approach
-- It provides owner-based CRUD, DRF endpoints, async processing, tests, and deployment support

@@ -1,18 +1,17 @@
 from academies.models import Academy
 from django.contrib import messages
-from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Avg
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
-from future_stars.mixins import AccountRequiredMixin
+from future_stars.mixins import AccountRequiredMixin, SuperuserPermissionRequiredMixin
 from players.forms import PlayerDeleteForm, PlayerForm
 from players.models import Player
 
 
-class PlayerCreateView(AccountRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, CreateView):
+class PlayerCreateView(AccountRequiredMixin, SuperuserPermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = Player
     form_class = PlayerForm
     template_name = "players/player-form.html"
@@ -22,6 +21,12 @@ class PlayerCreateView(AccountRequiredMixin, PermissionRequiredMixin, SuccessMes
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_superuser:
+            if not Academy.objects.exists():
+                messages.warning(
+                    request,
+                    "Create an academy before adding players.",
+                )
+                return redirect("academy-create")
             return super().dispatch(request, *args, **kwargs)
 
         if request.user.role == "analyst":
@@ -50,7 +55,7 @@ class PlayerCreateView(AccountRequiredMixin, PermissionRequiredMixin, SuccessMes
         return kwargs
 
 
-class PlayerEditView(AccountRequiredMixin, PermissionRequiredMixin, UpdateView):
+class PlayerEditView(AccountRequiredMixin, SuperuserPermissionRequiredMixin, UpdateView):
     model = Player
     form_class = PlayerForm
     template_name = "players/player-form.html"
@@ -95,7 +100,7 @@ class PlayerDetailView(DetailView):
     context_object_name = "player"
 
 
-class PlayerDeleteView(AccountRequiredMixin, PermissionRequiredMixin, DeleteView):
+class PlayerDeleteView(AccountRequiredMixin, SuperuserPermissionRequiredMixin, DeleteView):
     model = Player
     template_name = "players/player-confirm-delete.html"
     success_url = reverse_lazy("player-list")

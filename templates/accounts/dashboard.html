@@ -6,7 +6,7 @@
 <section class="py-5">
     <div class="container">
         <div class="row g-4">
-            <div class="{% if user.role == 'analyst' %}col-lg-12{% else %}col-lg-4{% endif %}">
+            <div class="{% if user.is_superuser or user.role != 'analyst' %}col-lg-4{% else %}col-lg-12{% endif %}">
                 <div class="card card-modern h-100 border-0">
                     <div class="card-body p-4">
                         <h1 class="h3 section-title">{{ user.get_full_name|default:user.username }}</h1>
@@ -29,14 +29,14 @@
                     </div>
                 </div>
             </div>
-            {% if user.role != 'analyst' %}
+            {% if user.is_superuser or user.role != 'analyst' %}
                 <div class="col-lg-8">
                     <div class="card card-modern h-100 border-0">
                         <div class="card-body p-4">
                             <h2 class="h4 section-title mb-3">Profile Actions</h2>
                             <p class="text-soft">Use these shortcuts to manage your private football workspace.</p>
                             <div class="d-flex flex-wrap gap-2">
-                                {% if perms.academies.add_academy %}
+                                {% if request.user.is_superuser or perms.academies.add_academy %}
                                     <a class="btn btn-primary" href="{% url 'academy-create' %}">Create Academy</a>
                                 {% endif %}
                                 {% if request.user.is_superuser or request.user.owned_academies.exists %}

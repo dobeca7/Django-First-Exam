@@ -1,16 +1,13 @@
-from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
-
 from academies.forms import AcademyDeleteForm, AcademyForm
 from academies.models import Academy
-from future_stars.mixins import AccountRequiredMixin
+from future_stars.mixins import AccountRequiredMixin, SuperuserPermissionRequiredMixin
 
 
-class AcademyCreateView(AccountRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, CreateView):
+class AcademyCreateView(AccountRequiredMixin, SuperuserPermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = Academy
     form_class = AcademyForm
     template_name = "academies/academy-form.html"
@@ -26,7 +23,7 @@ class AcademyCreateView(AccountRequiredMixin, PermissionRequiredMixin, SuccessMe
         return reverse("academy-detail-slug", kwargs={"slug": self.object.slug})
 
 
-class AcademyEditView(AccountRequiredMixin, PermissionRequiredMixin, UpdateView):
+class AcademyEditView(AccountRequiredMixin, SuperuserPermissionRequiredMixin, UpdateView):
     model = Academy
     form_class = AcademyForm
     template_name = "academies/academy-form.html"
@@ -60,7 +57,7 @@ class AcademyDetailView(DetailView):
         return super().get_object(queryset=queryset)
 
 
-class AcademyDeleteView(AccountRequiredMixin, PermissionRequiredMixin, DeleteView):
+class AcademyDeleteView(AccountRequiredMixin, SuperuserPermissionRequiredMixin, DeleteView):
     model = Academy
     template_name = "academies/academy-confirm-delete.html"
     success_url = reverse_lazy("academy-list")

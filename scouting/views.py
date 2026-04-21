@@ -1,21 +1,38 @@
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
-
-from future_stars.mixins import AccountRequiredMixin
+from future_stars.mixins import AccountRequiredMixin, SuperuserPermissionRequiredMixin
+from players.models import Player
 from scouting.forms import ScoutReportForm
 from scouting.models import ScoutReport
 from scouting.tasks import update_player_report_stats
 
 
-class ScoutReportCreateView(AccountRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, CreateView):
+class ScoutReportCreateView(AccountRequiredMixin, SuperuserPermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = ScoutReport
     form_class = ScoutReportForm
     template_name = "scouting/scoutreport-form.html"
     success_url = reverse_lazy("report-list")
     success_message = "Scout report created successfully."
     permission_required = "scouting.add_scoutreport"
+
+    def dispatch(self, request, *args, **kwargs):
+        if not Player.objects.exists():
+            if request.user.is_superuser:
+                messages.warning(
+                    request,
+                    "Create a player before adding scout reports.",
+                )
+                return redirect("player-create")
+            if request.user.role == "scout":
+                messages.warning(
+                    request,
+                    "A report cannot be created until at least one player exists.",
+                )
+                return redirect("home")
+        return super().dispatch(request, *args, **kwargs)
 
     def get_initial(self):
         initial = super().get_initial()
@@ -32,7 +49,7 @@ class ScoutReportCreateView(AccountRequiredMixin, PermissionRequiredMixin, Succe
         return response
 
 
-class ScoutReportEditView(AccountRequiredMixin, PermissionRequiredMixin, UpdateView):
+class ScoutReportEditView(AccountRequiredMixin, SuperuserPermissionRequiredMixin, UpdateView):
     model = ScoutReport
     form_class = ScoutReportForm
     template_name = "scouting/scoutreport-form.html"
@@ -71,7 +88,7 @@ class ScoutReportDetailView(DetailView):
     queryset = ScoutReport.objects.select_related("player", "player__academy").prefetch_related("skills")
 
 
-class ScoutReportDeleteView(AccountRequiredMixin, PermissionRequiredMixin, DeleteView):
+class ScoutReportDeleteView(AccountRequiredMixin, SuperuserPermissionRequiredMixin, DeleteView):
     model = ScoutReport
     template_name = "scouting/scoutreport-confirm-delete.html"
     success_url = reverse_lazy("report-list")
